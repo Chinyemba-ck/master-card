@@ -1,8 +1,8 @@
 # PowerPoint decks
 *.pptx
 
-# Raw data files (IGS exports)
-*.xlsx
+# Other large or irrelevant Office files (not data exports)
+*.docx
 
 # Other documentation not for repo
 BRIDGEWORK_SOLUTION_NARRATIVE.md
