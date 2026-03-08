@@ -225,18 +225,22 @@ Loan flow went from +84.6% growth in 2017 to exactly 0% in 2024–2025. Business
 
 ### Finding 6 — Franklin vs IGS 60+ tracts: where the gaps are largest
 
+Benchmark = average across all observations (all years) for tracts with IGS ≥ 60 in the dataset. Computed dynamically in `src/deep_analysis.py`.
+
 | Indicator | Franklin | Avg IGS 60+ | Gap | Priority |
 |---|---|---|---|---|
-| Internet Access | 2 | 70 | −68 | CRITICAL |
-| Commercial Diversity | 36 | 98 | −62 | CRITICAL |
-| Min/Women Owned Biz | 15 | 75 | −60 | CRITICAL |
-| Labor Market Engagement | 14 | 61 | −47 | CRITICAL |
-| Travel Time to Work | 9 | 51 | −42 | CRITICAL |
-| Net Occupancy | 38 | 78 | −40 | HIGH |
-| Small Business Loans | 44 | 66 | −22 | HIGH |
-| **Health Insurance** | **59** | **52** | **+7** | STRENGTH |
-| **Female Above Poverty** | **69** | **50** | **+19** | STRENGTH |
-| **Affordable Housing** | **56** | **44** | **+12** | STRENGTH |
+| Internet Access | 2 | 80 | −78 | CRITICAL |
+| Min/Women Owned Biz | 15 | 79 | −64 | CRITICAL |
+| Commercial Diversity | 36 | 97 | −61 | CRITICAL |
+| Labor Market Engagement | 14 | 70 | −56 | CRITICAL |
+| Travel Time to Work | 9 | 65 | −56 | CRITICAL |
+| Net Occupancy | 38 | 82 | −44 | CRITICAL |
+| Real Estate Value | 46 | 80 | −34 | HIGH |
+| Small Business Loans | 44 | 70 | −26 | HIGH |
+| Park Land | 19 | 42 | −23 | HIGH |
+| **New Businesses** | **73** | **64** | **+9** | STRENGTH |
+| **Female Above Poverty** | **69** | **66** | **+3** | STRENGTH |
+| **Affordable Housing** | **56** | **28** | **+28** | STRENGTH |
 
 → *See [chart 07](https://github.com/Chinyemba-ck/master-card/blob/main/charts/07_boxplot_all_tracts.png)*
 

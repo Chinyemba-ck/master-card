@@ -168,7 +168,10 @@ demographics = {
 }
 demo_df = pd.DataFrame(demographics)
 
-# IGS 2025 snapshot comparison
+# IGS 2025 snapshot comparison — derived from loaded data, not hardcoded
+fr25 = fr[fr['Year'] == years[-1]].iloc[0]
+ri25 = ri[ri['Year'] == years[-1]].iloc[0]
+
 igs_comparison = {
     'Indicator': [
         'Overall IGS', 'Place Score', 'Economy Score', 'Community Score',
@@ -176,8 +179,14 @@ igs_comparison = {
         'New Businesses', 'Labor Engagement', 'Commercial Diversity',
         'Early Education', 'Health Insurance', 'Female Above Poverty'
     ],
-    'Franklin': [38, 32, 40, 42, 2, 9, 38, 73, 14, 36, 19, 59, 69],
-    'Richland': [59, 62, 40, 59, 3, 70, 85, 68, 58, 21, 69, 51, 65],
+    'Franklin': [int(fr25['IGS']), int(fr25['Place']), int(fr25['Economy']), int(fr25['Community']),
+                 int(fr25['Internet_Access']), int(fr25['Travel_Time']), int(fr25['Net_Occupancy']),
+                 int(fr25['New_Businesses']), int(fr25['Labor_Engagement']), int(fr25['Comm_Diversity']),
+                 int(fr25['Early_Education']), int(fr25['Health_Insurance']), int(fr25['Female_Poverty'])],
+    'Richland': [int(ri25['IGS']), int(ri25['Place']), int(ri25['Economy']), int(ri25['Community']),
+                 int(ri25['Internet_Access']), int(ri25['Travel_Time']), int(ri25['Net_Occupancy']),
+                 int(ri25['New_Businesses']), int(ri25['Labor_Engagement']), int(ri25['Comm_Diversity']),
+                 int(ri25['Early_Education']), int(ri25['Health_Insurance']), int(ri25['Female_Poverty'])],
 }
 igs_df = pd.DataFrame(igs_comparison)
 igs_df['Gap'] = igs_df['Richland'] - igs_df['Franklin']
@@ -288,8 +297,10 @@ plt.close()
 print('Saved: charts/13_comparative_snapshot.png')
 
 print('\nAll comparative analysis charts saved to charts/')
-print('\n=== RICHLAND KEY INSIGHT: What changed 2017-2023 ===')
-print('Richland IGS: 48 (2017) -> 42 (2018) -> 46 (2021) -> 50 (2022) -> 59 (2023)')
+print('\n=== RICHLAND KEY INSIGHT: What changed 2017-2025 ===')
+ri_traj = ri.set_index('Year')['IGS']
+traj_str = ' -> '.join([f"{int(v)} ({y})" for y, v in ri_traj.items()])
+print(f'Richland IGS: {traj_str}')
 print()
 
 # Print the biggest Richland changes 2022->2023 (the year of the big jump)

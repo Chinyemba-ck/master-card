@@ -163,22 +163,27 @@ print("\n" + "=" * 55)
 print("FRANKLIN PARISH — WHAT-IF SIMULATION")
 print("=" * 55)
 
-# Current Franklin 2025 values
-franklin_2025_raw = {
-    'Internet Access': 2, 'Affordable Housing': 56, 'Travel Time to Work': 9,
-    'Net Occupancy': 38, 'Park Land': 19, 'Real Estate Value': 46,
-    'New Businesses': 73, 'Small Biz Loans': 44, 'Min/Women Biz': 15,
-    'Labor Mkt Engagement': 14, 'Commercial Diversity': 36,
-    'Personal Income': 36, 'Spending per Capita': np.nan,
-    'Female Above Poverty': 69, 'Gini Coefficient': 42,
-    'Early Education': 19, 'Health Insurance': 59,
+# Current Franklin 2025 values — loaded from CSV, not hardcoded
+_CSV_TO_FEAT = {
+    'Internet_Access': 'Internet Access', 'Affordable_Housing': 'Affordable Housing',
+    'Travel_Time': 'Travel Time to Work', 'Net_Occupancy': 'Net Occupancy',
+    'Park_Land': 'Park Land', 'Real_Estate': 'Real Estate Value',
+    'New_Businesses': 'New Businesses', 'Small_Biz_Loans': 'Small Biz Loans',
+    'Min_Women_Biz': 'Min/Women Biz', 'Labor_Engagement': 'Labor Mkt Engagement',
+    'Comm_Diversity': 'Commercial Diversity', 'Personal_Income': 'Personal Income',
+    'Female_Poverty': 'Female Above Poverty', 'Gini': 'Gini Coefficient',
+    'Early_Education': 'Early Education', 'Health_Insurance': 'Health Insurance',
 }
+_fr_csv = pd.read_csv('data/franklin_parish_indicators.csv')
+_fr_row  = _fr_csv[_fr_csv['Year'] == _fr_csv['Year'].max()].iloc[0]
+_fr_actual_igs = int(_fr_row['IGS'])
+
+franklin_2025_raw = {feat: float(_fr_row[csv_col]) for csv_col, feat in _CSV_TO_FEAT.items()}
+franklin_2025_raw['Spending per Capita'] = np.nan  # not in IGS export; filled with median below
 # Fill NaN with dataset median
 for k in franklin_2025_raw:
-    if pd.isna(franklin_2025_raw[k]):
-        col_idx = feature_names.index(k) if k in feature_names else -1
-        if col_idx >= 0:
-            franklin_2025_raw[k] = df_model[k].median()
+    if pd.isna(franklin_2025_raw[k]) and k in feature_names:
+        franklin_2025_raw[k] = df_model[k].median()
 
 fr_current = np.array([franklin_2025_raw.get(f, df_model[f].median())
                         for f in feature_names]).reshape(1, -1)
@@ -187,7 +192,7 @@ pred_current_ridge = ridge.predict(scaler.transform(fr_current))[0]
 pred_current_rf    = rf.predict(fr_current)[0]
 pred_current_gb    = gb.predict(fr_current)[0]
 
-print(f"\n  Current Franklin IGS (actual): 38")
+print(f"\n  Current Franklin IGS (actual): {_fr_actual_igs}")
 print(f"  Ridge prediction:  {pred_current_ridge:.1f}")
 print(f"  RF prediction:     {pred_current_rf:.1f}")
 print(f"  GB prediction:     {pred_current_gb:.1f}")

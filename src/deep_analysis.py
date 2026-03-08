@@ -59,36 +59,34 @@ def predict(scenario):
     arr = np.array([scenario.get(f, df_model[f].median()) for f in feature_names]).reshape(1,-1)
     return ridge.predict(scaler.transform(arr))[0]
 
-franklin_2025 = {
-    'Internet Access': 2, 'Affordable Housing': 56, 'Travel Time to Work': 9,
-    'Net Occupancy': 38, 'Park Land': 19, 'Real Estate Value': 46,
-    'New Businesses': 73, 'Small Biz Loans': 44, 'Min/Women Biz': 15,
-    'Labor Mkt Engagement': 14, 'Commercial Diversity': 36,
-    'Personal Income': 36, 'Spending per Capita': float(df_model['Spending per Capita'].median()),
-    'Female Above Poverty': 69, 'Gini Coefficient': 42,
-    'Early Education': 19, 'Health Insurance': 59,
+# ── Load 2025 values directly from CSVs (no hardcoding) ──────────────────
+_CSV_TO_FEAT = {
+    'Internet_Access': 'Internet Access', 'Affordable_Housing': 'Affordable Housing',
+    'Travel_Time': 'Travel Time to Work', 'Net_Occupancy': 'Net Occupancy',
+    'Park_Land': 'Park Land', 'Real_Estate': 'Real Estate Value',
+    'New_Businesses': 'New Businesses', 'Small_Biz_Loans': 'Small Biz Loans',
+    'Min_Women_Biz': 'Min/Women Biz', 'Labor_Engagement': 'Labor Mkt Engagement',
+    'Comm_Diversity': 'Commercial Diversity', 'Personal_Income': 'Personal Income',
+    'Female_Poverty': 'Female Above Poverty', 'Gini': 'Gini Coefficient',
+    'Early_Education': 'Early Education', 'Health_Insurance': 'Health Insurance',
 }
+_fr_csv = pd.read_csv('data/franklin_parish_indicators.csv')
+_ri_csv = pd.read_csv('data/richland_parish_indicators.csv')
+_fr_row = _fr_csv[_fr_csv['Year'] == _fr_csv['Year'].max()].iloc[0]
+_ri_row = _ri_csv[_ri_csv['Year'] == _ri_csv['Year'].max()].iloc[0]
 
-richland_2025 = {
-    'Internet Access': 3, 'Affordable Housing': 72, 'Travel Time to Work': 70,
-    'Net Occupancy': 85, 'Park Land': 43, 'Real Estate Value': 72,
-    'New Businesses': 68, 'Small Biz Loans': 50, 'Min/Women Biz': 82,
-    'Labor Mkt Engagement': 58, 'Commercial Diversity': 21,
-    'Personal Income': 56, 'Spending per Capita': 0,
-    'Female Above Poverty': 65, 'Gini Coefficient': 56,
-    'Early Education': 69, 'Health Insurance': 51,
-}
+franklin_2025 = {feat: float(_fr_row[csv_col]) for csv_col, feat in _CSV_TO_FEAT.items()}
+franklin_2025['Spending per Capita'] = float(df_model['Spending per Capita'].median())
 
-avg_60_vals = {
-    'Internet Access': 70, 'Affordable Housing': 44, 'Travel Time to Work': 51,
-    'Net Occupancy': 78, 'Park Land': 40, 'Real Estate Value': 74,
-    'New Businesses': 75, 'Small Biz Loans': 66, 'Min/Women Biz': 75,
-    'Labor Mkt Engagement': 61, 'Commercial Diversity': 98, 'Personal Income': 56,
-    'Spending per Capita': 65, 'Female Above Poverty': 50, 'Gini Coefficient': 56,
-    'Early Education': 26, 'Health Insurance': 52,
-}
+richland_2025 = {feat: float(_ri_row[csv_col]) for csv_col, feat in _CSV_TO_FEAT.items()}
+richland_2025['Spending per Capita'] = 0  # Richland spending-per-capita not in IGS export
 
-print(f"Current Franklin IGS (Ridge model): {predict(franklin_2025):.1f}  (actual: 38)")
+# Avg of all observations with IGS >= 60 (computed from model dataset)
+_high = df_model[df_model['IGS'] >= 60]
+avg_60_vals = {feat: float(_high[feat].mean()) for feat in feature_names}
+
+_fr_actual_igs = int(_fr_row['IGS'])
+print(f"Current Franklin IGS (Ridge model): {predict(franklin_2025):.1f}  (actual: {_fr_actual_igs})")
 
 # SCENARIO 1 — Conservative: just cross 45
 s45 = franklin_2025.copy()
