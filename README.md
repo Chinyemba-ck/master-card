@@ -15,13 +15,13 @@
 
 | File | Census Tract | Location | IGS 2025 | Role |
 |---|---|---|---|---|
-| [`030542.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_030542.xlsx) | 22041950100 | Franklin Parish, LA | 38 | **Primary — target tract** |
-| [`030523.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_030523.xlsx) | 22083970600 | Richland Parish, LA | 59 | Benchmark — same state, rural |
-| [`025930.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_025930.xlsx) | 6019005805 | Fresno, CA | 70 | High-performer reference |
-| [`025916.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_025916.xlsx) | 6019003104 | Fresno, CA | 60 | High-performer reference |
-| [`025736.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_025736.xlsx) | 6019003302 | Fresno, CA | <45 | Below-45 comparison |
-| [`030838.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_030838.xlsx) | 48113018501 | Dallas, TX | 60 | High-performer reference |
-| [`030824.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/Inclusive_Growth_Score_Data_Export_26-02-2026_030824.xlsx) | 48113019013 | Dallas, TX | <45 | Below-45 comparison |
+| [`030542.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030542.xlsx) | 22041950100 | Franklin Parish, LA | 38 | **Primary — target tract** |
+| [`030523.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030523.xlsx) | 22083970600 | Richland Parish, LA | 59 | Benchmark — same state, rural |
+| [`025930.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_025930.xlsx) | 6019005805 | Fresno, CA | 70 | High-performer reference |
+| [`025916.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_025916.xlsx) | 6019003104 | Fresno, CA | 60 | High-performer reference |
+| [`025736.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_025736.xlsx) | 6019003302 | Fresno, CA | <45 | Below-45 comparison |
+| [`030838.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030838.xlsx) | 48113018501 | Dallas, TX | 60 | High-performer reference |
+| [`030824.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030824.xlsx) | 48113019013 | Dallas, TX | <45 | Below-45 comparison |
 
 **Dataset structure:**
 - Sheet used: `Compared to Urban-Rural`
@@ -44,11 +44,11 @@
 | **Community** (6) | Personal Income, Spending per Capita, Female Above Poverty, Gini Coefficient, Early Education Enrollment, Health Insurance Coverage |
 
 ### Supporting Context Sources
-- **US Census Bureau QuickFacts** — Franklin Parish: population ~19,600, median income $44,103, poverty rate 19%, 28.7% Black/African American
-- **Louisiana Department of Education** — 57% economically disadvantaged students, 60% minority enrollment
-- **Louisiana Economic Development (LED)** — Winnsboro designated Development Ready Community (2024)
-- **[NELPCO / Volt Broadband](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/)** — $54M fiber build serving Franklin and 6 other parishes (11,000 homes/businesses); [construction completed October 2024](https://voltbroadband.com/2024/10/01/progress-report-october-1-2024/); 94% of members approved the investment. Seven-parish coverage confirmed by [Conexon engineering partner](https://conexon.us/client-success/volt-broadband/).
-- **Louisiana Department of Health** — $208M Rural Health Transformation Program (2025)
+- **[US Census Bureau QuickFacts — Franklin Parish, Louisiana](https://www.census.gov/quickfacts/fact/table/franklinparishlouisiana/PST045224)** — Population ~19,600, median HH income $44,103, poverty rate 19.0%, 28.7% Black/African American (ACS 2023 estimates)
+- **[Louisiana Department of Education — School Finder](https://louisianaschools.com/)** — Franklin Parish district: 2,685 students, 57% economically disadvantaged, 60% minority enrollment; [district report card](https://doe.louisiana.gov/)
+- **[Louisiana Economic Development — Winnsboro Named Development Ready Community](https://www.opportunitylouisiana.gov/news/winnsboro-named-louisiana-development-ready-community)** — Winnsboro/Franklin Parish completed multi-year strategic plan; top identified priority was broadband access; now [44th LDRC participant](https://www.opportunitylouisiana.gov/why-louisiana/certified-sites)
+- **[NELPCO / Volt Broadband — Connect Louisiana](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/)** — $54M fiber build serving Franklin and 6 other parishes (11,000 homes/businesses); [construction completed October 2024](https://voltbroadband.com/2024/10/01/progress-report-october-1-2024/); 94% of members approved the investment; [Conexon engineering partner](https://conexon.us/client-success/volt-broadband/)
+- **[Louisiana Department of Health — Rural Health Transformation Program](https://ldh.la.gov/news/RHTP-funding-announcement)** — $208M awarded to Louisiana; [program overview](https://ldh.la.gov/page/rural-health-transformation-program); targets 1.1M rural residents, 37% on Medicaid
 
 ### Processed Data (CSV exports for reproducibility)
 
@@ -63,11 +63,11 @@
 
 ## 2. ANALYSIS SCRIPTS
 
-### [`analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/analysis.py)
+### [`analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/analysis.py)
 **Purpose:** Load all 7 IGS files, build comparison dataset, produce 7 descriptive charts.
 
 **Steps performed:**
-1. Load all `.xlsx` files from working directory using `os.listdir()`
+1. Load all `.xlsx` files from `igs_exports/` using `os.listdir('igs_exports')`
 2. Read each with `pd.read_excel(..., sheet_name='Compared to Urban-Rural', header=[0,1])`
 3. Flatten multi-level column headers with `'_'.join()`
 4. Drop rows with missing FIPS code, concat all into one DataFrame (63 rows)
@@ -90,7 +90,7 @@
 
 ---
 
-### [`regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/regression_model.py)
+### [`regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py)
 **Purpose:** Train three ML models on the 63-observation dataset, identify IGS drivers, run what-if simulation.
 
 **Steps performed:**
@@ -122,7 +122,7 @@
 
 ---
 
-### [`deep_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/deep_analysis.py)
+### [`deep_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/deep_analysis.py)
 **Purpose:** Ridge-only simulation with three planning scenarios and benchmark gap tables.
 
 **Steps performed:**
@@ -288,7 +288,7 @@ No broadband (2/100)     →   No telehealth, no remote→   Economy + Healthcar
 
 ## 5. COMPARATIVE ANALYSIS — WHY DID RICHLAND GO UP?
 
-### Script: [`comparative_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/comparative_analysis.py)
+### Script: [`comparative_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/comparative_analysis.py)
 
 Richland Parish went from IGS 48 (2017) to IGS 59 (2025) — a +11 point gain while Franklin fell from 42 to 38 (−4). Both are rural, same state, same size. The 21-point gap in 2025 is not explained by demographics.
 
@@ -378,6 +378,6 @@ Franklin held **higher** scores than Richland on Travel Time, Early Education, a
 
 ---
 
-*Scripts: [`analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/analysis.py) · [`regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/regression_model.py) · [`deep_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/deep_analysis.py) · [`comparative_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/comparative_analysis.py)*
+*Scripts: [`analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/analysis.py) · [`regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py) · [`deep_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/deep_analysis.py) · [`comparative_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/comparative_analysis.py)*
 *Charts: [`charts/`](https://github.com/Chinyemba-ck/master-card/tree/main/charts) (13 charts)*
 *Data: [Mastercard IGS Tool](https://mastercardcenter.org/inclusive-growth-score/) (7 exports, 2017–2025) · [US Census Bureau ACS](https://www.census.gov/acs/www/) · [Connect Louisiana / NELPCO broadband](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/) · Louisiana state agencies*

@@ -5,10 +5,13 @@ from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 import warnings; warnings.filterwarnings('ignore')
 
-files = sorted([f for f in os.listdir('.') if f.endswith('.xlsx')])
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(ROOT)
+
+files = sorted([f for f in os.listdir('igs_exports') if f.endswith('.xlsx')])
 all_data = []
 for fname in files:
-    df = pd.read_excel(fname, sheet_name='Compared to Urban-Rural', header=[0,1])
+    df = pd.read_excel(os.path.join('igs_exports', fname), sheet_name='Compared to Urban-Rural', header=[0,1])
     df.columns = ['_'.join([str(c) for c in col]).strip() for col in df.columns]
     data_rows = df.iloc[1:].dropna(subset=['META_Census Tract FIPS code'])
     all_data.append(data_rows)

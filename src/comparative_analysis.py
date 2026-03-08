@@ -11,6 +11,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import os
 
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(ROOT)
+
 plt.rcParams.update({
     'font.family': 'DejaVu Sans',
     'axes.spines.top': False,

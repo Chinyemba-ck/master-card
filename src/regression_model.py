@@ -18,6 +18,9 @@ from sklearn.inspection import permutation_importance
 import os, warnings
 warnings.filterwarnings('ignore')
 
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(ROOT)
+
 plt.rcParams.update({
     'font.family': 'DejaVu Sans',
     'axes.spines.top': False,
@@ -33,10 +36,10 @@ DARK     = '#1A1A2E'
 GRAY     = '#7F8C8D'
 
 # ── Load All Data ──────────────────────────────────────────────────────────
-files = sorted([f for f in os.listdir('.') if f.endswith('.xlsx')])
+files = sorted([f for f in os.listdir('igs_exports') if f.endswith('.xlsx')])
 all_data = []
 for fname in files:
-    df = pd.read_excel(fname, sheet_name='Compared to Urban-Rural', header=[0,1])
+    df = pd.read_excel(os.path.join('igs_exports', fname), sheet_name='Compared to Urban-Rural', header=[0,1])
     df.columns = ['_'.join([str(c) for c in col]).strip() for col in df.columns]
     data_rows = df.iloc[1:].dropna(subset=['META_Census Tract FIPS code'])
     all_data.append(data_rows)
