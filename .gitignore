@@ -1,0 +1,26 @@
+# PowerPoint decks
+*.pptx
+
+# Raw data files (IGS exports)
+*.xlsx
+
+# Other documentation not for repo
+BRIDGEWORK_SOLUTION_NARRATIVE.md
+CITATIONS_AND_METHODOLOGY.md
+CRITIQUE_AND_JUDGE_QA.md
+SOLUTION_NARRATIVE.md
+PROJECT_DOCUMENTATION.md
+
+# Patch/utility scripts
+patch_slide6.py
+patch_slides_v3.py
+census_context.py
+build_slides.py
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp lock files
+~$*
