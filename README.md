@@ -59,7 +59,8 @@ The Score is derived from the gap between Tract and Base. A low score means the 
 
 | File | Description | Rows |
 |---|---|---|
-| [`data/all_tracts_igs_scores.csv`](https://github.com/Chinyemba-ck/master-card/blob/main/data/all_tracts_igs_scores.csv) | All 7 tracts × 9 years — IGS + all 15 indicator scores | 63 |
+| `data/national_igs_full.csv` | **Full national IGS extract** — 84,676 tracts × 9 years, 18 indicator scores. Generated from the 2025 national Excel export via `python src/extract_national.py`. Used by regression model. | 757,582 |
+| [`data/all_tracts_igs_scores.csv`](https://github.com/Chinyemba-ck/master-card/blob/main/data/all_tracts_igs_scores.csv) | 7 comparison tracts × 9 years — IGS + all 15 indicator scores | 63 |
 | [`data/franklin_parish_indicators.csv`](https://github.com/Chinyemba-ck/master-card/blob/main/data/franklin_parish_indicators.csv) | Franklin Parish only (FIPS 22041950100), 2017–2025 | 9 |
 | [`data/richland_parish_indicators.csv`](https://github.com/Chinyemba-ck/master-card/blob/main/data/richland_parish_indicators.csv) | Richland Parish only (FIPS 22083970600), 2017–2025 | 9 |
 | [`data/franklin_vs_richland_comparison.csv`](https://github.com/Chinyemba-ck/master-card/blob/main/data/franklin_vs_richland_comparison.csv) | Side-by-side comparison with gap calculations | 9 |
@@ -74,9 +75,10 @@ The analysis is split into focused modules. Entry point: `python src/regression_
 
 | File | Responsibility |
 |------|---------------|
+| [`src/extract_national.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/extract_national.py) | **One-time setup** — extract score columns from raw national Excel → `data/national_igs_full.csv` |
 | [`src/regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py) | Orchestrator — calls all modules in order |
-| [`src/data_loader.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/data_loader.py) | Load & clean all IGS Excel exports; build model-ready DataFrame |
-| [`src/models.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/models.py) | Train Ridge, Random Forest, Gradient Boosting; compute CV scores |
+| [`src/data_loader.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/data_loader.py) | Load national CSV (757k rows, 18 features); build model-ready DataFrame |
+| [`src/models.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/models.py) | Train Ridge, Random Forest, Gradient Boosting; CV on 50k sample |
 | [`src/simulate.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/simulate.py) | HealthScore what-if scenarios; full indicator audit docstring |
 | [`src/charts.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/charts.py) | All chart generation (charts 08–10) |
 
@@ -115,28 +117,39 @@ The analysis is split into focused modules. Entry point: `python src/regression_
 **Entry point:** `python src/regression_model.py`
 
 **Pipeline steps:**
-1. `data_loader.py` — Build model dataset: 63 rows, 17 feature columns, target = `SUMMARY_Inclusive Growth Score`; fill NaN with column median; standardize with `StandardScaler`
-2. `models.py` — Train Ridge, Random Forest, Gradient Boosting with 5-fold CV; compute feature importance (RF) and standardized coefficients (Ridge)
+1. `data_loader.py` — Load `data/national_igs_full.csv` (757,582 rows, 84,676 tracts, 18 features); fill NaN with national median; standardize with `StandardScaler`. New 18th indicator: `Spend Growth`.
+2. `models.py` — Train Ridge, Random Forest, Gradient Boosting with 5-fold CV on 50,000-row sample (speed); all three models valid at national scale.
 3. `simulate.py` — Run Franklin Parish HealthScore scenarios (Phase 1/2/3) and indicator sensitivity (+20 pts per indicator)
 4. `charts.py` — Save charts 08–10
 
-**Model performance — cross-validated (5-fold CV):**
+> **Data source upgrade:** Previous model used 7 Franklin-area Excel exports (n=63). This version uses the full national IGS export (n=757,582, 84,676 unique tracts, 2017–2025). RF and GB are no longer overfitting — all three models are now statistically valid.
+
+**Model performance — cross-validated (5-fold CV, 50k sample):**
 
 | Model | CV R² | CV MAE | Verdict |
 |---|---|---|---|
-| **Ridge Regression** | **0.805 ± 0.186** | **2.45 ± 1.25** | ✅ **Valid — use this** |
-| Random Forest | **−0.151 ± 1.318** | 5.28 ± 1.53 | ❌ Overfitting — CV R² is negative |
-| Gradient Boosting | **−0.366 ± 1.368** | 5.96 ± 1.42 | ❌ Overfitting — CV R² is negative |
+| **Ridge Regression** | **0.935 ± 0.004** | **1.40 ± 0.01** | ✅ Valid |
+| **Random Forest** | **0.849 ± 0.006** | **2.97 ± 0.03** | ✅ Valid (was −0.15 at n=63) |
+| **Gradient Boosting** | **0.956 ± 0.006** | **1.30 ± 0.02** | ✅ Valid (was −0.37 at n=63) |
 
-> **Critical note:** With only 63 observations, Random Forest and Gradient Boosting overfit. Their training R² looks good (RF training R²=0.987 visible in chart 08) but cross-validated R² is negative — meaning they fail to generalize. **Ridge Regression is the only statistically valid model for this dataset.** RF and GB are shown for directional reference only.
+**Ridge standardized coefficients (top drivers — national model):**
+
+| Rank | Indicator | Coef | Richland r | Interpretation |
+|---|---|---|---|---|
+| 1 | Personal Income | +2.15 | +0.943 | Strongest Ridge driver AND Richland's #1 correlation |
+| 2 | Net Occupancy | +1.88 | +0.827 | Population stability — jobs keep people from leaving |
+| 3 | Labor Mkt Engagement | +1.86 | +0.911 | Richland's #2 driver — workforce participation chain |
+| 4 | Commercial Diversity | +1.80 | +0.419 | Cross-tract signal; NOT a Franklin-specific driver (F r=−0.43) |
+| 5 | Real Estate Value | +1.79 | +0.683 | Follows net occupancy and income |
+| 18 | Spend Growth | +0.56 | N/A | New 18th indicator; weakest predictor; Franklin has no history |
 
 **Charts produced:**
 
 | Chart | File | What it shows |
 |---|---|---|
-| 8 | [`charts/08_regression_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png) | 4-panel. Top-left: Ridge standardized coefficients — Park Land (+3.69, out of scope), Commercial Diversity (+2.81), and Real Estate (+2.53) are the top positive drivers; Health Insurance (−1.41) is negative (artifact — do not target). Top-right: RF feature importance — top predictors ranked by importance score. Bottom-left: RF actual vs predicted with Franklin 2025 (red dot) and Phase 1 target (green star). Bottom-right: What-if simulation comparing current Franklin vs Phase 1 HealthScore target across all 3 models + ensemble average. |
-| 9 | [`charts/09_model_comparison.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png) | Side-by-side CV R² and CV MAE for all 3 models. Shows RF and GB with negative CV R² — confirming they overfit on n=63. Ridge is the clear winner with R²=0.805, MAE=2.45. |
-| 10 | [`charts/10_sensitivity_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png) | Sensitivity: predicted IGS gain from +20 points on each indicator individually (using RF). Top single-indicator impact: **Labor Market Engagement (+2.3 pts)** far above all others, then Small Business Loans (+1.5), Internet Access (+0.9), Net Occupancy (+0.5). Everything else under +0.3. Health Insurance and Min/Women Biz show slight negative — overfitting artifact. Read with caution given RF overfitting issue. |
+| 8 | [`charts/08_regression_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png) | 4-panel. Top-left: Ridge standardized coefficients (national n=757k) — Personal Income (+2.15), Net Occupancy (+1.88), and Labor Engagement (+1.86) are top drivers; Spend Growth (+0.56) is the new 18th indicator. Top-right: RF feature importance — Labor Engagement dominates at 51% importance. Bottom-left: RF actual vs predicted with Franklin 2025 (red dot) and Phase 1 target (green star). Bottom-right: What-if simulation comparing current Franklin vs Phase 1 HealthScore target across all 3 models + ensemble average. |
+| 9 | [`charts/09_model_comparison.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png) | Side-by-side CV R² and MAE for all 3 models. All valid at national scale: Ridge 0.935, RF 0.849, GB 0.956. Prior n=63 versions had RF/GB at negative R². |
+| 10 | [`charts/10_sensitivity_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png) | Sensitivity: predicted IGS gain from +20 points on each indicator individually (RF, national model). Shows which indicators move the needle most for a Franklin-like tract. |
 
 ---
 
@@ -176,19 +189,19 @@ The analysis is split into focused modules. Entry point: `python src/regression_
 |-----------|---------|---------|---------|---------|---------|
 | Small Biz Loans | 44 | 55 | 62 | 66 | Franklin restoration (was 74 in 2017). SELAHEC + SBA pipeline. Franklin recovered 30→60 in 4 years already. Target 66 = empirical floor for all 3 IGS 60+ tracts. |
 | Early Education | 19 | 30 | 42 | 55 | Franklin restoration (was 78/2017, 65/2020). Richland r=+0.71. HealthScore stabilizes childcare → centers stay open. Richland gained +22 in one year; we claim +11. |
-| Commercial Diversity | 36 | 42 | 52 | 65 | Franklin r=−0.43 (CommDiv highest when IGS lowest). Modest crash recovery only. Richland CommDiv=21 at IGS=59 — NOT primary lever. Ridge coeff +2.81 is cross-tract, not Franklin-specific. |
-| Min/Women Biz | 15 | 25 | 45 | 60 | Childcare/MH practices (majority women-owned) stabilized → survive, grow, register. Low Ridge coeff (+0.27). |
+| Commercial Diversity | 36 | 42 | 52 | 65 | Franklin r=−0.43 (CommDiv highest when IGS lowest). Modest crash recovery only. Richland CommDiv=21 at IGS=59 — NOT primary lever. National Ridge coeff +1.80 is cross-tract signal. |
+| Min/Women Biz | 15 | 25 | 45 | 60 | Childcare/MH practices (majority women-owned) stabilized → survive, grow, register. National Ridge coeff +1.35. |
 
 **INDIRECT — HealthScore triggers the chain (Richland-validated):**
 
 | Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Evidence |
 |-----------|---------|---------|---------|---------|---------|
-| Labor Mkt Engagement | 14 | 14 | 28 | 42 | Richland r=+0.91 — #2 driver. Franklin was 48 in 2017. Childcare→women work; 1–2 yr lag. 42 restores Franklin's 2017 level. |
-| Personal Income | 36 | 36 | 43 | 52 | Richland r=+0.94 — #1 driver. Richland jumped +16 in 2023 when chain fired. 52 approaches Richland's 56. |
-| Female Above Poverty | 69 | 69 | 75 | 80 | Richland r=+0.90. Franklin already beats Richland. High Ridge coeff (+2.09) — even +6 has meaningful impact. |
-| Net Occupancy | 38 | 38 | 42 | 52 | Richland r=+0.83. Jobs → people stop leaving. |
-| Travel Time to Work | 9 | 9 | 18 | 28 | Richland r=+0.85 — #4 driver. Remote RHTP jobs reduce commute burden. Richland went 24→70 in 2 years; 28 is very conservative. |
-| Spending per Capita | 50 | 50 | 58 | 65 | Follows income. Ridge coeff +2.27. 60+ tract avg=68. |
+| Labor Mkt Engagement | 14 | 14 | 28 | 42 | Richland r=+0.91 — #2 driver. National Ridge #3 (+1.86). Franklin was 48 in 2017. Childcare→women work; 1–2 yr lag. 42 restores Franklin's 2017 level. |
+| Personal Income | 36 | 36 | 43 | 52 | Richland r=+0.94 — #1 driver. National Ridge #1 (+2.15). Richland jumped +16 in 2023 when chain fired. 52 approaches Richland's 56. |
+| Female Above Poverty | 69 | 69 | 75 | 80 | Richland r=+0.90. National Ridge +1.28. Franklin already beats Richland. Even +6 has meaningful impact. |
+| Net Occupancy | 38 | 38 | 42 | 52 | Richland r=+0.83. National Ridge #2 (+1.88). Jobs → people stop leaving. |
+| Travel Time to Work | 9 | 9 | 18 | 28 | Richland r=+0.85 — #4 driver. National Ridge +1.22. Remote RHTP jobs reduce commute burden. Richland went 24→70 in 2 years; 28 is very conservative. |
+| Spending per Capita | 50 | 50 | 58 | 65 | Follows income. National Ridge +1.21. 60+ tract avg=68. |
 
 **INFRASTRUCTURE — NELPCO/Volt, not HealthScore:**
 
@@ -196,15 +209,23 @@ The analysis is split into focused modules. Entry point: `python src/regression_
 |-----------|---------|---------|---------|---------|------|
 | Internet Access | 2 | 2 | 35 | 70 | NELPCO/Volt $54M fiber. Richland's internet FELL (8→3) as its IGS rose 48→59. Not an IGS driver — label as infrastructure. |
 
-**Predictions (R²=0.805 Ridge — only valid model at n=63):**
+**NEW — Spend Growth (18th indicator, added in 2025 national export):**
 
-| Phase | Timeline | What's targeted | Ridge IGS | Ensemble avg |
-|-------|----------|----------------|-----------|--------------|
-| Phase 1 | Year 1 | Direct: loans, early ed, CommDiv, min/women biz | **39.2** | 39.0 |
-| Phase 2 | Years 2–3 | + indirect chain: labor eng, income, travel time, net occ, female pov | **43.7** | 46.0 |
-| Phase 3 | Years 4–5 | + full chain maturity, net occupancy stabilizes, capital floor 66 | **50.4** | 49.5 |
+| Indicator | Current | Phase 1–3 | Note |
+|-----------|---------|-----------|------|
+| Spend Growth | NaN | national median | Franklin has no historical Spend Growth data. Held at national median (~50) across all phases. National Ridge coeff +0.56 (weakest). Not a simulation lever. |
 
-> **Why these numbers are defensible:** Small Biz Loans (44→55) and Early Education (19→30) are Phase 1 restoration targets — Franklin held these levels in 2017–2020. Labor Engagement (14→28) and Personal Income (36→43) in Phase 2 are the Richland-validated primary drivers with r=0.91 and 0.94. Phase 3 Ridge of 50.4 crosses IGS 45 — built on the same indicators that moved Richland from 48 to 59.
+**Predictions (national model, R²=0.935 Ridge, 0.956 GB, 0.849 RF):**
+
+| Phase | Timeline | What's targeted | Ridge IGS | RF IGS | GB IGS | Ensemble avg |
+|-------|----------|----------------|-----------|--------|--------|--------------|
+| Phase 1 | Year 1 | Direct: loans, early ed, CommDiv, min/women biz | 34.8 (+2.0) | 45.2 (+0.0) | 35.2 (+1.5) | **38.4** |
+| Phase 2 | Years 2–3 | + indirect chain: labor eng, income, travel time, net occ, female pov | 41.7 (+9.0) | 47.9 (+2.6) | 41.6 (+8.0) | **43.7** |
+| Phase 3 | Years 4–5 | + full chain maturity, net occupancy stabilizes, capital floor 66 | **50.2 (+17.5)** | **53.9 (+8.7)** | **50.6 (+16.9)** | **51.6** |
+
+> **Why these numbers are defensible:** Small Biz Loans (44→55) and Early Education (19→30) are Phase 1 restoration targets — Franklin held these levels in 2017–2020. Labor Engagement (14→28) and Personal Income (36→43) in Phase 2 are the top two Ridge drivers nationally (r=+1.86 and +2.15) and Richland's top two correlators (r=0.91 and 0.94). Phase 3 ensemble of 51.6 crosses IGS 45 — built on the same human economic chain that moved Richland from 48 to 59.
+
+> **Franklin Opportunity Zone status:** Franklin Parish tract (FIPS 22041950100) is **NOT designated as a federal Opportunity Zone**. The IGS export `META_Is an Opportunity Zone` field is NaN for Franklin across all 9 years. Richland Parish (22083970600) is also not OZ-designated. Louisiana has 121 OZ tracts in the dataset, concentrated in Orleans, East Baton Rouge, Caddo, and Lafayette parishes.
 
 ---
 

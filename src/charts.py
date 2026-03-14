@@ -126,7 +126,7 @@ def chart_08_regression_analysis(coef_df, rf_imp, X, y, ridge, rf, gb, scaler,
 def chart_09_model_comparison(ridge_cv, ridge_mae, rf_cv, rf_mae, gb_cv, gb_mae):
     """Side-by-side CV R² and MAE for all 3 models."""
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
-    fig.suptitle('Model Performance Summary — IGS Prediction',
+    fig.suptitle('Model Performance Summary — IGS Prediction (n=757,582 national tracts)',
                  fontweight='bold', fontsize=14)
 
     models  = ['Ridge\nRegression', 'Random\nForest', 'Gradient\nBoosting']

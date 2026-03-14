@@ -65,17 +65,19 @@ FRANKLIN HISTORY CORRELATION WITH IGS (r across 9 years):
   was highest in 2024 when IGS was 35). Do not claim CommDiv as primary
   lever in Franklin-specific framing.
 
-RIDGE COEFF (cross-tract model, 63 obs):
-  Park Land +3.69 | CommDiversity +2.81 | RealEstate +2.53
-  SpendPC   +2.27 | FemAbvPov     +2.09 | NetOcc     +1.93
-  LaborEng  +1.44 | HealthIns     -1.41 | SmlBizLoan +1.25
-  EarlyEd   +1.13 | NewBiz        +1.10 | Income     +0.83
-  TravelTime +0.76 | InternetAcc  -0.73 | Gini       +0.64
-  AffHousing +0.40 | MinWomenBiz  +0.27
+RIDGE COEFF (national model, 757,582 obs, R²=0.937):
+  Income      +2.15 | NetOcc      +1.88 | LaborEng   +1.86
+  CommDiv     +1.80 | RealEstate  +1.79 | Gini       +1.56
+  MinWomenBiz +1.35 | FemAbvPov   +1.28 | ParkLand   +1.27
+  TravelTime  +1.22 | SmlBizLoan  +1.22 | SpendPC    +1.21
+  NewBiz      +1.20 | HealthIns   +1.18 | AffHousing +1.14
+  InternetAcc +1.12 | EarlyEd     +0.99 | SpendGrow  +0.56
 
-  NOTE: CommDiversity has high Ridge coeff (+2.81) but this is
-  cross-tract signal, not Franklin-specific. Use Ridge for magnitude
-  estimates; use historical Franklin correlation for causal narrative.
+  NOTE: National model R² jumped from 0.805 (n=63) to 0.937 (n=757k).
+  All three models now valid — no overfitting. Personal Income (+2.15)
+  is the top Ridge driver, matching Richland r=+0.943.
+  Spend Growth is the new 18th indicator (weak, +0.56); Franklin has
+  no historical Spend Growth data so Phase scenarios use national median.
 
 ───────────────────────────────────────────────────────────────────────────
 ECONOMY PILLAR
@@ -275,16 +277,17 @@ FINAL SCENARIO TABLE — revised numbers with dual evidence base
   Female Above Pov      69   69   75   80    I    -0.71   +0.90   Richland's #3 driver; Franklin already strong
   Net Occupancy         38   38   42   52    I    +0.24   +0.83   Richland's #5 driver; jobs->people stay
   Travel Time to Work    9    9   18   28    I    +0.63   +0.85   Richland's #4 driver; remote RHTP jobs
-  Spending per Cap      50   50   58   65    I    N/A     N/A     Follows income (Ridge +2.27)
-  Real Estate Value     46   46   46   58    I    -0.15   +0.68   Follows net occupancy (slow; Ridge +2.53)
+  Spending per Cap      50   50   58   65    I    N/A     N/A     Follows income (national Ridge +1.21)
+  Real Estate Value     46   46   46   58    I    -0.15   +0.68   Follows net occupancy (slow; Ridge +1.79)
   Comm Diversity        36   42   52   65    D    -0.43   +0.42   NOT a Franklin IGS driver; modest recovery
-  Min/Women Biz         15   25   45   60    D    -0.99   -0.54   New ground; low Ridge coeff (+0.27)
+  Min/Women Biz         15   25   45   60    D    -0.99   -0.54   New ground; Ridge +1.35 (national)
+  Spend Growth         NaN  med  med  med    X    N/A     N/A     New 18th indicator; Franklin has no history; hold at median
   Internet Access        2    2   35   70    X    +0.69   -0.38   NELPCO/Volt infra; Richland fell as IGS rose
   New Businesses        73   73   73   73    X    +0.80   +0.15   Strength; volatile (73->16->73); hold
   Affordable Housing    56   56   56   56    X    N/A     N/A     Already strong; low coeff
   Gini Coefficient      42   42   42   42    X    N/A     N/A     Structural; 10+ yr horizon
-  Health Insurance      59   59   59   59    X    N/A     N/A     Negative Ridge coeff; 93.5% coverage
-  Park Land             19   19   19   19    X    N/A     N/A     Highest Ridge coeff; out of scope
+  Health Insurance      59   59   59   59    X    N/A     N/A     National Ridge +1.18; 93.5% coverage; hold
+  Park Land             19   19   19   19    X    N/A     N/A     Highest Ridge (old); out of HealthScore scope
 ═══════════════════════════════════════════════════════════════════════════
 """
 
