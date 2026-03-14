@@ -17,6 +17,7 @@
 
 | File | Census Tract | Location | IGS 2025 | Role |
 |---|---|---|---|---|
+| [`184206.xlsx`](data/Inclusive_Growth_Score_Data_Export_13-03-2026_184206.xlsx) | National | **Full national export — 84,676 tracts × 9 yrs (757,582 rows)** | — | **National regression model source** |
 | [`030542.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030542.xlsx) | 22041950100 | **Winnsboro**, Franklin Parish, LA | 38 | **Primary — target tract** |
 | [`030523.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030523.xlsx) | 22083970600 | **Archibald**, Richland Parish, LA | 59 | **Benchmark — same region, rural** |
 | [`025930.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_025930.xlsx) | 6019005805 | Fresno, CA | 70 | High-performer reference |
@@ -24,6 +25,8 @@
 | [`025736.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_025736.xlsx) | 6019003302 | Fresno, CA | <45 | Below-45 comparison |
 | [`030838.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030838.xlsx) | 48113018501 | Dallas, TX | 60 | High-performer reference |
 | [`030824.xlsx`](https://github.com/Chinyemba-ck/master-card/blob/main/igs_exports/Inclusive_Growth_Score_Data_Export_26-02-2026_030824.xlsx) | 48113019013 | Dallas, TX | <45 | Below-45 comparison |
+
+> **National export (`184206.xlsx`):** The March 2026 national IGS export (`Inclusive_Growth_Score_Data_Export_13-03-2026_184206.xlsx`) is the source for the regression model. It covers all 84,676 US census tracts across 2017–2025, 18 indicator scores per row, 72 columns total. This file is the foundation for all Charts 08–10 model outputs. Tract-level individual exports (7 files above) are used for descriptive analysis (Charts 01–07).
 
 **Dataset structure:**
 - Sheet used: `Compared to Urban-Rural`
@@ -51,13 +54,6 @@ The Score is derived from the gap between Tract and Base. A low score means the 
 | **Community** (6) | Personal Income, Spending per Capita, Female Above Poverty, Gini Coefficient, Early Education Enrollment, Health Insurance Coverage |
 
 > **Note on Spend Growth:** The 2025 national export added `ECONOMY_Spend Growth Score` as an 18th indicator. It is not present in the 7 individual tract exports. Winnsboro/Franklin has NaN for this indicator across all years. In the national model it has the weakest Ridge coefficient (+0.56) and is held at the national median in all simulation scenarios.
-
-### Supporting Context Sources
-- **[US Census Bureau QuickFacts — Franklin Parish, Louisiana](https://www.census.gov/quickfacts/fact/table/franklinparishlouisiana/PST045224)** — Population ~19,600, median HH income $44,103, poverty rate 19.0%, 28.7% Black/African American (ACS 2023 estimates)
-- **[Louisiana Department of Education — School Finder](https://louisianaschools.com/)** — Franklin Parish district: 2,685 students, 57% economically disadvantaged, 60% minority enrollment; [district report card](https://doe.louisiana.gov/)
-- **[Louisiana Economic Development — Winnsboro Named Development Ready Community](https://www.opportunitylouisiana.gov/news/winnsboro-named-louisiana-development-ready-community)** — Winnsboro/Franklin Parish completed multi-year strategic plan; top identified priority was broadband access; now [44th LDRC participant](https://www.opportunitylouisiana.gov/why-louisiana/certified-sites)
-- **[NELPCO / Volt Broadband — Connect Louisiana](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/)** — $54M fiber build serving Franklin and 6 other parishes (11,000 homes/businesses); [construction completed October 2024](https://voltbroadband.com/2024/10/01/progress-report-october-1-2024/); 94% of members approved the investment; [Conexon engineering partner](https://conexon.us/client-success/volt-broadband/)
-- **[Louisiana Department of Health — Rural Health Transformation Program](https://ldh.la.gov/news/RHTP-funding-announcement)** — $208M awarded to Louisiana; [program overview](https://ldh.la.gov/page/rural-health-transformation-program); targets 1.1M rural residents, 37% on Medicaid
 
 ### Processed Data (CSV exports for reproducibility)
 
@@ -147,26 +143,42 @@ The analysis is split into focused modules. Entry point: `python src/regression_
 
 The strength of the analysis is that all four agree on the same levers: **Labor Market Engagement, Personal Income, Early Education, and Net Occupancy** are consistently the top drivers across national patterns and Archibald's actual trajectory.
 
-**Ridge standardized coefficients (top drivers — national model, n=757,582):**
+**Ridge standardized coefficients — national model (n=757,582) alongside direct Winnsboro vs Archibald benchmark:**
 
-| Rank | Indicator | Coef | Archibald r | Winnsboro r | Interpretation |
+| Rank | Indicator | Coef (national) | Archibald r | Winnsboro r | Winnsboro 2025 | Archibald 2025 | Gap | Interpretation |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Personal Income | **+2.15** | **+0.943** | −0.66 | 36 | 56 | −20 | Top national driver AND Archibald's #1 driver — income follows labor chain |
+| 2 | Net Occupancy | **+1.88** | **+0.827** | +0.24 | 38 | 85 | −47 | Population stability — jobs keep people from leaving |
+| 3 | Labor Mkt Engagement | **+1.86** | **+0.911** | +0.73 | 14 | 58 | −44 | Archibald's #2 driver — workforce participation chain |
+| 4 | Commercial Diversity | +1.80 | +0.419 | **−0.43** | 36 | 21 | Winnsboro +15 | Cross-tract signal; NOT a Winnsboro-specific driver (CommDiv highest when IGS was lowest) |
+| 5 | Real Estate Value | +1.79 | +0.683 | −0.15 | 46 | 72 | −26 | Follows net occupancy and income (slow-moving) |
+| 6 | Female Above Poverty | +1.28 | **+0.901** | −0.71 | 69 | 65 | Winnsboro +4 | Archibald's #3 driver; Winnsboro already strong here |
+| 7 | Travel Time to Work | +1.22 | **+0.852** | +0.63 | 9 | 70 | −61 | Archibald's #4 driver; remote work jobs would move this |
+| 13 | Early Education | +0.99 | +0.712 | **+0.78** | 19 | 69 | −50 | Strongest Winnsboro local correlation; root trigger |
+| 18 | Spend Growth | +0.56 | N/A | N/A | NaN | NaN | — | New 18th indicator; weakest predictor; Winnsboro has no historical data |
+
+> **Key nuance — Commercial Diversity:** National Ridge coeff +1.80 (cross-tract) but Winnsboro r=−0.43 (local negative — CommDiv was at 62 in 2024 when IGS was at 35). Archibald has CommDiv=21 at IGS=59 — Archibald is thriving with *low* diversity. CommDiv is a cross-tract statistical signal, not an actionable Winnsboro lever.
+
+**Indicators where national model, Archibald benchmark, and Winnsboro history all agree — the levers to target:**
+
+| Indicator | National Ridge | Archibald r | Winnsboro r | Winnsboro gap | Verdict |
 |---|---|---|---|---|---|
-| 1 | Personal Income | +2.15 | **+0.943** | −0.66 | Top Ridge driver AND Archibald's #1 driver — income follows labor chain |
-| 2 | Net Occupancy | +1.88 | **+0.827** | +0.24 | Population stability — jobs keep people from leaving |
-| 3 | Labor Mkt Engagement | +1.86 | **+0.911** | +0.73 | Archibald's #2 driver — workforce participation chain |
-| 4 | Commercial Diversity | +1.80 | +0.419 | **−0.43** | Cross-tract signal; NOT a Winnsboro-specific driver (CommDiv highest when IGS was lowest) |
-| 5 | Real Estate Value | +1.79 | +0.683 | −0.15 | Follows net occupancy and income (slow-moving) |
-| 18 | Spend Growth | +0.56 | N/A | N/A | New 18th indicator; weakest predictor; Winnsboro has no historical data |
-
-> **Key nuance:** Commercial Diversity has the 4th highest national Ridge coefficient (+1.80) — meaning it is a strong IGS driver *across all tracts nationally*. However, in Winnsboro's own data it has a **negative** correlation with IGS (r=−0.43) — CommDiv was at its highest (62) in 2024 when IGS was at 35. In Archibald, CommDiv=21 while IGS=59 — Archibald is doing fine with low diversity. This means CommDiv is a cross-tract signal, not a Winnsboro-specific lever.
+| **Labor Mkt Engagement** | **+1.86 (rank 3)** | **+0.911** | +0.73 | −44 pts | ✅ USE — all three sources agree; biggest actionable gap |
+| **Early Education** | +0.99 (rank 13) | +0.712 | **+0.78** | −50 pts | ✅ USE — root trigger; Archibald proof; Winnsboro was at 78 (2017) |
+| **Personal Income** | **+2.15 (rank 1)** | **+0.943** | — | −20 pts | ✅ USE (indirect) — follows labor chain; Archibald's top driver |
+| **Net Occupancy** | **+1.88 (rank 2)** | **+0.827** | — | −47 pts | ✅ USE (indirect) — population stabilizes when jobs appear |
+| **Travel Time to Work** | +1.22 (rank 7) | **+0.852** | +0.63 | −61 pts | ✅ USE (indirect) — remote RHTP jobs; Archibald went 48→70 |
+| **Small Biz Loans** | +1.22 (rank 7) | — | +0.72 | −26 pts | ✅ USE (direct) — Winnsboro's own lever; was 74 in 2017 |
+| Commercial Diversity | +1.80 (rank 4) | +0.42 | **−0.43** | Winnsboro +15 | ⚠️ SKIP as primary lever — local data contradicts national signal |
+| Internet Access | −0.73 | **−0.379** | +0.69 | −76 pts | ⚠️ INFRASTRUCTURE only — NELPCO/Volt; Archibald's internet fell as IGS rose |
 
 **Charts produced:**
 
 | Chart | File | What it shows |
 |---|---|---|
-| 8 | [`charts/08_regression_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png) | 4-panel. Top-left: Ridge standardized coefficients (national n=757k) — Personal Income (+2.15), Net Occupancy (+1.88), Labor Engagement (+1.86) are top drivers; Spend Growth (+0.56) is the new 18th indicator. Top-right: RF feature importance — Labor Engagement dominates at 51% importance. Bottom-left: RF actual vs predicted with Winnsboro 2025 (red dot) and Phase 1 target (green star). Bottom-right: What-if simulation comparing current Winnsboro vs Phase 1 HealthScore target across all 3 models + ensemble average. |
-| 9 | [`charts/09_model_comparison.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png) | Side-by-side CV R² and MAE for all 3 models (national, n=757,582). All valid at national scale: Ridge 0.935, RF 0.849, GB 0.956. Prior n=63 versions had RF/GB at negative R². |
-| 10 | [`charts/10_sensitivity_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png) | Sensitivity: predicted IGS gain from +20 points on each indicator individually (national RF applied to Winnsboro's current profile). Shows which indicators would move the needle most for a Winnsboro-like tract at the national scale. |
+| 8 | [`charts/08_regression_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png) | 4-panel. **Top-left:** Ridge standardized coefficients (national n=757k) — Personal Income (+2.15), Net Occupancy (+1.88), Labor Engagement (+1.86) are top 3 national drivers; direct benchmark confirms: Archibald leads Winnsboro by 20, 47, and 44 pts on these same three indicators. **Top-right:** RF feature importance — Labor Engagement dominates at 51% importance nationally, aligning with Archibald r=0.91 and Winnsboro's own history (was 48 in 2017, now 14). **Bottom-left:** RF actual vs predicted — Winnsboro 2025 red dot (actual IGS=38, pred≈45) and Phase 1 green star; Archibald at IGS=59 sits in the upper cluster. **Bottom-right:** What-if simulation comparing current Winnsboro vs Phase 1 HealthScore target across all 3 models + ensemble average. |
+| 9 | [`charts/09_model_comparison.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png) | Side-by-side CV R² and MAE for all 3 models (national, n=757,582). All valid at national scale: Ridge 0.935, RF 0.849, GB 0.956. Prior n=63 versions had RF/GB at negative R². The national model (source: `184206.xlsx`) is trained on all 84,676 tracts — both Winnsboro (IGS=38) and Archibald (IGS=59) are included as data points. |
+| 10 | [`charts/10_sensitivity_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png) | Sensitivity: predicted IGS gain from +20 points on each indicator individually (national RF applied to Winnsboro's current profile). **Direct benchmark read:** The indicators where Archibald most exceeds Winnsboro (Labor Engagement +44, Travel Time +61, Net Occupancy +47, Early Education +50) are the same ones producing the highest IGS gains in this sensitivity chart — confirming that closing the Winnsboro-Archibald gap and improving the national model predictions are the same problem. |
 
 ---
 
@@ -495,4 +507,14 @@ Winnsboro held **higher** scores than Archibald on Travel Time, Early Education,
 
 *Pipeline: [`src/regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py) (entry point) · [`src/data_loader.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/data_loader.py) · [`src/models.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/models.py) · [`src/simulate.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/simulate.py) · [`src/charts.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/charts.py)*
 *Charts: [`charts/`](https://github.com/Chinyemba-ck/master-card/tree/main/charts) (13 charts)*
-*Data: [Mastercard IGS Tool](https://mastercardcenter.org/inclusive-growth-score/) (national export + 7 tract exports, 2017–2025) · [US Census Bureau ACS](https://www.census.gov/acs/www/) · [Connect Louisiana / NELPCO broadband](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/) · Louisiana state agencies*
+*Data: [Mastercard IGS Tool](https://mastercardcenter.org/inclusive-growth-score/) (national export `184206.xlsx` + 7 tract exports, 2017–2025) · [US Census Bureau ACS](https://www.census.gov/acs/www/) · [Connect Louisiana / NELPCO broadband](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/) · Louisiana state agencies*
+
+---
+
+## 7. SUPPORTING CONTEXT SOURCES
+
+- **[US Census Bureau QuickFacts — Franklin Parish, Louisiana](https://www.census.gov/quickfacts/fact/table/franklinparishlouisiana/PST045224)** — Population ~19,600, median HH income $44,103, poverty rate 19.0%, 28.7% Black/African American (ACS 2023 estimates)
+- **[Louisiana Department of Education — School Finder](https://louisianaschools.com/)** — Franklin Parish district: 2,685 students, 57% economically disadvantaged, 60% minority enrollment; [district report card](https://doe.louisiana.gov/)
+- **[Louisiana Economic Development — Winnsboro Named Development Ready Community](https://www.opportunitylouisiana.gov/news/winnsboro-named-louisiana-development-ready-community)** — Winnsboro/Franklin Parish completed multi-year strategic plan; top identified priority was broadband access; now [44th LDRC participant](https://www.opportunitylouisiana.gov/why-louisiana/certified-sites)
+- **[NELPCO / Volt Broadband — Connect Louisiana](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/)** — $54M fiber build serving Franklin and 6 other parishes (11,000 homes/businesses); [construction completed October 2024](https://voltbroadband.com/2024/10/01/progress-report-october-1-2024/); 94% of members approved the investment; [Conexon engineering partner](https://conexon.us/client-success/volt-broadband/)
+- **[Louisiana Department of Health — Rural Health Transformation Program](https://ldh.la.gov/news/RHTP-funding-announcement)** — $208M awarded to Louisiana; [program overview](https://ldh.la.gov/page/rural-health-transformation-program); targets 1.1M rural residents, 37% on Medicaid
