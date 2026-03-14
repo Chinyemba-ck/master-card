@@ -68,7 +68,22 @@ The Score is derived from the gap between Tract and Base. A low score means the 
 
 ## 2. ANALYSIS SCRIPTS
 
-### [`analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/analysis.py)
+### Modular Pipeline
+
+The analysis is split into focused modules. Entry point: `python src/regression_model.py`
+
+| File | Responsibility |
+|------|---------------|
+| [`src/regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py) | Orchestrator — calls all modules in order |
+| [`src/data_loader.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/data_loader.py) | Load & clean all IGS Excel exports; build model-ready DataFrame |
+| [`src/models.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/models.py) | Train Ridge, Random Forest, Gradient Boosting; compute CV scores |
+| [`src/simulate.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/simulate.py) | HealthScore what-if scenarios; full indicator audit docstring |
+| [`src/charts.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/charts.py) | All chart generation (charts 08–10) |
+
+---
+
+### Descriptive Analysis — Charts 01–07
+
 **Purpose:** Load all 7 IGS files, build comparison dataset, produce 7 descriptive charts.
 
 **Steps performed:**
@@ -95,17 +110,15 @@ The Score is derived from the gap between Tract and Base. A low score means the 
 
 ---
 
-### [`regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py)
-**Purpose:** Train three ML models on the 63-observation dataset, identify IGS drivers, run what-if simulation.
+### Regression + Simulation — Charts 08–10
 
-**Steps performed:**
-1. Build model dataset: 63 rows, 17 feature columns, target = `SUMMARY_Inclusive Growth Score`
-2. Drop rows where target is missing; fill feature NaN with column median
-3. Standardize features with `StandardScaler` (for Ridge coefficients to be comparable)
-4. Train three models with 5-fold cross-validation
-5. Compute feature importance (RF) and standardized coefficients (Ridge)
-6. Run Franklin Parish what-if simulation
-7. Run indicator sensitivity: test +20 points on each indicator individually
+**Entry point:** `python src/regression_model.py`
+
+**Pipeline steps:**
+1. `data_loader.py` — Build model dataset: 63 rows, 17 feature columns, target = `SUMMARY_Inclusive Growth Score`; fill NaN with column median; standardize with `StandardScaler`
+2. `models.py` — Train Ridge, Random Forest, Gradient Boosting with 5-fold CV; compute feature importance (RF) and standardized coefficients (Ridge)
+3. `simulate.py` — Run Franklin Parish HealthScore scenarios (Phase 1/2/3) and indicator sensitivity (+20 pts per indicator)
+4. `charts.py` — Save charts 08–10
 
 **Model performance — cross-validated (5-fold CV):**
 
@@ -121,22 +134,20 @@ The Score is derived from the gap between Tract and Base. A low score means the 
 
 | Chart | File | What it shows |
 |---|---|---|
-| 8 | [`charts/08_regression_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png) | 4-panel. Top-left: Ridge standardized coefficients — Commercial Diversity (+2.81) and Net Occupancy (+1.93) are the top positive drivers. Health Insurance (−1.41) has a negative coefficient (artifact of small dataset, not causal). Top-right: RF feature importance — Net Occupancy (0.354) and Labor Engagement (0.242) dominate. Bottom-left: RF actual vs predicted — training R²=0.987 (misleadingly high, this is train-set overfitting). Bottom-right: What-if simulation — HealthScore scenario lifts ensemble average from 38.0 to 44.6. |
+| 8 | [`charts/08_regression_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png) | 4-panel. Top-left: Ridge standardized coefficients — Park Land (+3.69, out of scope), Commercial Diversity (+2.81), and Real Estate (+2.53) are the top positive drivers; Health Insurance (−1.41) is negative (artifact — do not target). Top-right: RF feature importance — top predictors ranked by importance score. Bottom-left: RF actual vs predicted with Franklin 2025 (red dot) and Phase 1 target (green star). Bottom-right: What-if simulation comparing current Franklin vs Phase 1 HealthScore target across all 3 models + ensemble average. |
 | 9 | [`charts/09_model_comparison.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png) | Side-by-side CV R² and CV MAE for all 3 models. Shows RF and GB with negative CV R² — confirming they overfit on n=63. Ridge is the clear winner with R²=0.805, MAE=2.45. |
 | 10 | [`charts/10_sensitivity_analysis.png`](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png) | Sensitivity: predicted IGS gain from +20 points on each indicator individually (using RF). Top single-indicator impact: **Labor Market Engagement (+2.3 pts)** far above all others, then Small Business Loans (+1.5), Internet Access (+0.9), Net Occupancy (+0.5). Everything else under +0.3. Health Insurance and Min/Women Biz show slight negative — overfitting artifact. Read with caution given RF overfitting issue. |
 
 ---
 
-### [`deep_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/deep_analysis.py)
-**Purpose:** Ridge-only simulation with three planning scenarios and benchmark gap tables.
+### `simulate.py` — HealthScore Scenarios
 
-**Steps performed:**
-1. Re-trains Ridge model (same dataset, same parameters)
-2. Hardcodes current Franklin 2025 values from IGS exports
-3. Defines three intervention scenarios with explicit indicator targets
-4. Predicts IGS for each scenario
-5. Prints gap table: Franklin vs average of 3 IGS 60+ tracts
-6. Prints lesson table: Franklin vs Richland on every indicator
+**Purpose:** Define three HealthScore intervention phases and run predictions across all models. Contains a full indicator audit as a module-level docstring — every target number is justified by data.
+
+**Indicator attribution categories:**
+- **D (Direct)** — HealthScore financial scoring causes this change
+- **I (Indirect)** — HealthScore triggers a downstream chain effect
+- **X (Infrastructure/Out of scope)** — held at baseline or driven by external programs
 
 **Revised HealthScore scenarios — realistic indicator attribution (simulate.py):**
 
@@ -323,8 +334,6 @@ No broadband (2/100)     →   No telehealth, no remote→   Economy + Healthcar
 
 ## 5. COMPARATIVE ANALYSIS — WHY DID RICHLAND GO UP?
 
-### Script: [`comparative_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/comparative_analysis.py)
-
 Richland Parish went from IGS 48 (2017) to IGS 59 (2025) — a +11 point gain while Franklin fell from 42 to 38 (−4). Both are rural, same state, same size. The 21-point gap in 2025 is not explained by demographics.
 
 ### The Single Year That Changed Everything — 2022 → 2023
@@ -413,6 +422,6 @@ Franklin held **higher** scores than Richland on Travel Time, Early Education, a
 
 ---
 
-*Scripts: [`analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/analysis.py) · [`regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py) · [`deep_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/deep_analysis.py) · [`comparative_analysis.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/comparative_analysis.py)*
+*Pipeline: [`src/regression_model.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/regression_model.py) (entry point) · [`src/data_loader.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/data_loader.py) · [`src/models.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/models.py) · [`src/simulate.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/simulate.py) · [`src/charts.py`](https://github.com/Chinyemba-ck/master-card/blob/main/src/charts.py)*
 *Charts: [`charts/`](https://github.com/Chinyemba-ck/master-card/tree/main/charts) (13 charts)*
 *Data: [Mastercard IGS Tool](https://mastercardcenter.org/inclusive-growth-score/) (7 exports, 2017–2025) · [US Census Bureau ACS](https://www.census.gov/acs/www/) · [Connect Louisiana / NELPCO broadband](https://www.connect.louisiana.gov/news/blog-post/summer-success-series-volt-broadband/) · Louisiana state agencies*
