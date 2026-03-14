@@ -3,7 +3,7 @@ charts.py — All regression analysis charts.
 
 Chart 08: 4-panel — Ridge coefficients, RF importance, Actual vs Predicted, What-if simulation
 Chart 09: Model comparison — CV R² and MAE for all 3 models
-Chart 10: Indicator sensitivity for Franklin Parish
+Chart 10: Indicator sensitivity for Winnsboro, LA
 """
 
 import os
@@ -43,7 +43,7 @@ def chart_08_regression_analysis(coef_df, rf_imp, X, y, ridge, rf, gb, scaler,
     pred_p1_gb    = sim_results[p1_key]['GB']
 
     fig = plt.figure(figsize=(16, 14))
-    fig.suptitle('IGS Regression Analysis — Franklin Parish, LA',
+    fig.suptitle('IGS Regression Analysis — Winnsboro, LA (Franklin Parish)',
                  fontsize=16, fontweight='bold', y=0.98)
 
     # Panel 1: Ridge coefficients
@@ -79,7 +79,7 @@ def chart_08_regression_analysis(coef_df, rf_imp, X, y, ridge, rf, gb, scaler,
     ax3.axhline(45, color=AMBER, linestyle=':', linewidth=1.3, label='IGS threshold (45)')
     ax3.axvline(45, color=AMBER, linestyle=':', linewidth=1.3)
     ax3.scatter([38], [pred_current_rf], color=MC_RED, s=150, zorder=5,
-                label=f'Franklin 2025 (pred={pred_current_rf:.1f})')
+                label=f'Winnsboro 2025 (pred={pred_current_rf:.1f})')
     ax3.scatter([38], [pred_p1_rf], color=GREEN, s=150, marker='*', zorder=5,
                 label=f'HealthScore Phase 1 (pred={pred_p1_rf:.1f})')
     ax3.set_xlabel('Actual IGS Score')
@@ -90,7 +90,7 @@ def chart_08_regression_analysis(coef_df, rf_imp, X, y, ridge, rf, gb, scaler,
 
     # Panel 4: What-if simulation
     ax4 = fig.add_subplot(2, 2, 4)
-    labels    = ['Current\nFranklin (2025)', 'HealthScore\nPhase 1 Target']
+    labels    = ['Current\nWinnsboro (2025)', 'HealthScore\nPhase 1 Target']
     ridge_vals = [pred_current_ridge, pred_p1_ridge]
     rf_vals    = [pred_current_rf,    pred_p1_rf]
     gb_vals    = [pred_current_gb,    pred_p1_gb]
@@ -168,7 +168,7 @@ def chart_10_sensitivity(sensitivity):
     ax.barh(sens_df.index[::-1], sens_df['IGS_Gain'][::-1], color=bar_c[::-1], alpha=0.85)
     ax.axvline(0, color='black', linewidth=0.8)
     ax.set_xlabel('Predicted IGS Gain from +20 Points on Each Indicator')
-    ax.set_title('Franklin Parish — Indicator Sensitivity Analysis\n'
+    ax.set_title('Winnsboro, LA — Indicator Sensitivity Analysis\n'
                  '(Which improvements would move the needle most?)',
                  fontweight='bold', fontsize=13)
     ax.legend(handles=[

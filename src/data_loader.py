@@ -39,8 +39,8 @@ FEATURES = {
 }
 TARGET = 'SUMMARY_Inclusive Growth Score'
 
-# Franklin Parish 2025 baseline — from franklin_parish_indicators.csv
-# Spend Growth not available for Franklin (NaN → filled with national median)
+# Winnsboro (Franklin Parish) 2025 baseline — from franklin_parish_indicators.csv
+# Spend Growth not available for Winnsboro (NaN → filled with national median)
 FRANKLIN_2025 = {
     'Internet Access':      2,
     'Affordable Housing':   19,
@@ -49,13 +49,13 @@ FRANKLIN_2025 = {
     'Park Land':            19,
     'Real Estate Value':    46,
     'New Businesses':       9,
-    'Spend Growth':         np.nan,   # not in Franklin CSV — use national median
+    'Spend Growth':         np.nan,   # not in Winnsboro CSV — use national median
     'Small Biz Loans':      44,
     'Min/Women Biz':        15,
     'Labor Mkt Engagement': 14,
     'Commercial Diversity': 36,
     'Personal Income':      36,
-    'Spending per Capita':  np.nan,   # not in Franklin CSV — use national median
+    'Spending per Capita':  np.nan,   # not in Winnsboro CSV — use national median
     'Female Above Poverty': 69,
     'Gini Coefficient':     42,
     'Early Education':      19,
@@ -91,7 +91,7 @@ def build_model_df(df):
 
 
 def load_franklin_2025(df_model, feature_names):
-    """Build Franklin 2025 baseline vector aligned to feature_names."""
+    """Build Winnsboro 2025 baseline vector aligned to feature_names."""
     baseline = dict(FRANKLIN_2025)
     for k in baseline:
         if pd.isna(baseline[k]) and k in feature_names:
