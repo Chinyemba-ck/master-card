@@ -17,6 +17,10 @@ patch_slides_v3.py
 census_context.py
 build_slides.py
 
+# Large generated data files (>100MB — exceeds GitHub limit)
+# Regenerate with: python src/extract_national.py
+data/national_igs_full.csv
+
 # Python cache
 __pycache__/
 *.pyc
