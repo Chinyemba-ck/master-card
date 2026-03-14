@@ -138,15 +138,41 @@ The Score is derived from the gap between Tract and Base. A low score means the 
 5. Prints gap table: Franklin vs average of 3 IGS 60+ tracts
 6. Prints lesson table: Franklin vs Richland on every indicator
 
-**Three scenarios and Ridge predictions:**
+**Revised HealthScore scenarios — realistic indicator attribution (simulate.py):**
 
-| Scenario | Indicators changed | Ridge IGS prediction |
-|---|---|---|
-| Scenario 1 — Conservative | Internet→35, LaborEng→30, MinWomen→40, EarlyEd→35, TravelTime→25, CommDiv→55 | **40.6** |
-| Scenario 2 — Expanded | + SmBizLoans→66, NetOcc→65, PersonalIncome→50, RealEstate→60, SpendPC→55 | **51.0** |
-| Scenario 3 — Full scale | All indicators adjusted toward IGS 60+ levels | **63.9** |
+Each indicator target is grounded in a specific causal mechanism. Indicators are grouped by who drives them:
 
-> These are **Ridge-only** predictions. Given that RF and GB overfit, the RF/GB scenario estimates previously cited (45.5, 47.7) are not reliable for n=63. Ridge predictions (40.6, 51.0, 63.9) are the valid numbers.
+**DIRECT — HealthScore financial health scoring causes this:**
+
+| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Mechanism |
+|-----------|---------|---------|---------|---------|-----------|
+| Small Biz Loans | 44 | 55 | 60 | 66 | HealthScore improves financial profile → SELAHEC loans ($10K–$350K, start-ups eligible, [ruralhealthinfo.org/funding/5965](https://www.ruralhealthinfo.org/funding/5965)) + SBA Community Advantage. Target 66 = the exact capital floor shared by all 3 IGS 60+ tracts. |
+| Commercial Diversity | 36 | 50 | 65 | 80 | Financially healthy providers stay open; new healthcare startups launch with startup capital. Diversity crashed 62→36 in one year when capital stopped — reversible. |
+| Min/Women Biz | 15 | 30 | 50 | 67 | Childcare and mental health practices are majority minority/women-owned. HealthScore stabilizes them financially → they survive, grow, register formally. |
+| Early Education | 19 | 28 | 35 | 39 | Childcare centers are a primary HealthScore target. More financially stable centers = more open, more slots. Was 78 in 2017 — not a structural ceiling. |
+
+**INDIRECT — HealthScore triggers the chain (same pattern as Richland's 2023 jump):**
+
+| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Mechanism |
+|-----------|---------|---------|---------|---------|-----------|
+| Labor Mkt Engagement | 14 | 14 | 20 | 35 | Healthcare businesses employ staff (billing, admin, care workers). Richland proof: childcare first → women work → labor engagement rises. Conservative lag of 1–2 years before this shows up. |
+| Personal Income | 36 | 36 | 40 | 48 | Follows labor engagement. Staff at stabilized providers earn wages; income follows. |
+
+**INFRASTRUCTURE — NELPCO/Volt, not HealthScore (label this clearly when presenting):**
+
+| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Mechanism |
+|-----------|---------|---------|---------|---------|-----------|
+| Internet Access | 2 | 2 | 35 | 70 | NELPCO/Volt $54M fiber build. HealthScore deploys on top of this infrastructure — it does not install fiber. Phase 1 excludes this; by Phase 2 the build is fully live. |
+
+**Ridge IGS predictions (R²=0.805 — the only valid model at n=63):**
+
+| Phase | Timeline | What's Being Targeted | Ridge IGS | Ensemble avg |
+|-------|----------|----------------------|-----------|--------------|
+| Phase 1 | Year 1 | HealthScore direct levers only (loans, diversity, min/women biz, early ed) | **39.8** | 39.3 |
+| Phase 2 | Years 2–3 | + indirect chain (labor, income) + capital floor approaching 66 + broadband live | **41.9** | 43.6 |
+| Phase 3 | Years 4–5 | + regional scale, net occupancy stabilizes, full capital floor hit | **46.6** | 48.1 |
+
+> **Note on revised numbers:** These projections are more conservative than earlier estimates (40.6/51.0/63.9) because Internet Access is correctly removed from Phase 1 and Labor Engagement is given a realistic lag. The Phase 3 prediction of 46.6 (Ridge) / 48.1 (ensemble) is honest: HealthScore alone, without major infrastructure or demographic shifts, realistically moves IGS from 38 to ~47 over 5 years. Crossing IGS 50+ requires the full broadband + labor chain to mature — which is achievable but takes time.
 
 ---
 
