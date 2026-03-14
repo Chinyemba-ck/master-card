@@ -324,6 +324,23 @@ The national Ridge model trained on 757,582 observations confirms which indicato
 
 The sensitivity analysis (chart 10, national RF applied to Winnsboro's profile) shows **Labor Market Engagement** produces the single largest IGS gain per 20-point improvement for a Winnsboro-like tract.
 
+**Direct Winnsboro vs Archibald benchmark (2025 scores):**
+
+| Indicator | Winnsboro 2025 | Archibald 2025 | Gap | Priority |
+|---|---|---|---|---|
+| Labor Market Engagement | 14 | 58 | **−44** | CRITICAL — primary lever (all 3 analyses agree) |
+| Travel Time to Work | 9 | 70 | **−61** | CRITICAL — Archibald's #4 driver; remote jobs path |
+| Net Occupancy | 38 | 85 | **−47** | CRITICAL — population stabilization; follows jobs |
+| Personal Income | 36 | 56 | **−20** | CRITICAL — Archibald's #1 driver; follows labor chain |
+| Early Education | 19 | 69 | **−50** | CRITICAL — root trigger; Winnsboro was 78 in 2017 |
+| Real Estate Value | 46 | 72 | **−26** | HIGH — slow-moving; follows net occupancy + income |
+| Small Biz Loans | 44 | 50 | **−6** | HIGH — Winnsboro bottleneck (was 74 in 2017) |
+| **Female Above Poverty** | **69** | **65** | **+4** | STRENGTH — Winnsboro already leads Archibald |
+| **New Businesses** | **73** | **68** | **+5** | STRENGTH — Winnsboro already leads Archibald |
+| **Affordable Housing** | **56** | **43** | **+13** | STRENGTH — Winnsboro already leads Archibald |
+| Commercial Diversity | 36 | 21 | +15 | ⚠️ Archibald thrives with *lower* diversity — not a primary lever |
+| Internet Access | 2 | 3 | −1 | Infrastructure only — NELPCO/Volt (not HealthScore) |
+
 → *See [chart 08](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png), [chart 09](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png), [chart 10](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png)*
 
 ---
