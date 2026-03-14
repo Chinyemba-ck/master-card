@@ -197,7 +197,7 @@ print(f"  Ridge prediction:  {pred_current_ridge:.1f}")
 print(f"  RF prediction:     {pred_current_rf:.1f}")
 print(f"  GB prediction:     {pred_current_gb:.1f}")
 
-# BridgeWork scenario
+# HealthScore scenario
 fr_bridgework = franklin_2025_raw.copy()
 fr_bridgework['Internet Access']      = 35   # Connectivity hub
 fr_bridgework['Labor Mkt Engagement'] = 30   # Remote work pipeline
@@ -213,7 +213,7 @@ pred_bw_ridge = ridge.predict(scaler.transform(fr_bw))[0]
 pred_bw_rf    = rf.predict(fr_bw)[0]
 pred_bw_gb    = gb.predict(fr_bw)[0]
 
-print(f"\n  BridgeWork Scenario IGS predictions:")
+print(f"\n  HealthScore Scenario IGS predictions:")
 print(f"  Ridge: {pred_current_ridge:.1f} -> {pred_bw_ridge:.1f}  (D{pred_bw_ridge-pred_current_ridge:+.1f})")
 print(f"  RF:    {pred_current_rf:.1f} -> {pred_bw_rf:.1f}  (D{pred_bw_rf-pred_current_rf:+.1f})")
 print(f"  GB:    {pred_current_gb:.1f} -> {pred_bw_gb:.1f}  (D{pred_bw_gb-pred_current_gb:+.1f})")
@@ -263,7 +263,7 @@ ax3.axvline(45, color=AMBER, linestyle=':', linewidth=1.3)
 ax3.scatter([38], [pred_current_rf], color=MC_RED, s=150, zorder=5,
             label=f'Franklin 2025 (pred={pred_current_rf:.1f})')
 ax3.scatter([38], [pred_bw_rf], color=GREEN, s=150, marker='*', zorder=5,
-            label=f'BridgeWork scenario (pred={pred_bw_rf:.1f})')
+            label=f'HealthScore scenario (pred={pred_bw_rf:.1f})')
 ax3.annotate('->', xy=(pred_current_rf, pred_current_rf),
              xytext=(pred_bw_rf-2, pred_bw_rf+1), fontsize=12, color=GREEN)
 ax3.set_xlabel('Actual IGS Score')
@@ -272,9 +272,9 @@ ax3.set_title(f'Actual vs Predicted IGS — Random Forest\n(R² = {r2_score(y, y
               fontweight='bold', fontsize=11)
 ax3.legend(fontsize=8)
 
-# Panel 4: What-If BridgeWork simulation
+# Panel 4: What-If HealthScore simulation
 ax4 = fig.add_subplot(2, 2, 4)
-scenarios = ['Current\nFranklin (2025)', 'BridgeWork\nYear 3 Target']
+scenarios = ['Current\nFranklin (2025)', 'HealthScore\nYear 3 Target']
 ridge_vals = [pred_current_ridge, pred_bw_ridge]
 rf_vals    = [pred_current_rf,    pred_bw_rf]
 gb_vals    = [pred_current_gb,    pred_bw_gb]
@@ -292,7 +292,7 @@ ax4.set_xticks(x_)
 ax4.set_xticklabels(scenarios)
 ax4.set_ylabel('Predicted IGS Score')
 ax4.set_ylim(0, 75)
-ax4.set_title('BridgeWork What-If Simulation\n(All Models — Predicted IGS After Intervention)',
+ax4.set_title('HealthScore What-If Simulation\n(All Models — Predicted IGS After Intervention)',
               fontweight='bold', fontsize=11)
 ax4.legend(fontsize=8)
 
@@ -372,6 +372,6 @@ plt.close()
 print("Saved: charts/10_sensitivity_analysis.png")
 
 print("\nAll regression charts saved to ./charts/")
-print(f"\nFinal Ensemble BridgeWork IGS Prediction: "
+print(f"\nFinal Ensemble HealthScore IGS Prediction: "
       f"{np.mean([pred_bw_ridge, pred_bw_rf, pred_bw_gb]):.1f} "
       f"(up from actual 38)")

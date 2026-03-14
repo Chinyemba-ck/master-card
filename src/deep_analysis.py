@@ -92,7 +92,7 @@ print(f"Current Franklin IGS (Ridge model): {predict(franklin_2025):.1f}  (actua
 s45 = franklin_2025.copy()
 s45.update({'Internet Access':35,'Labor Mkt Engagement':30,'Min/Women Biz':40,
             'Early Education':35,'Travel Time to Work':25,'Commercial Diversity':55})
-print(f"Scenario 1 — Cross 45 (BridgeWork basic):          {predict(s45):.1f}")
+print(f"Scenario 1 — Cross 45 (HealthScore basic):          {predict(s45):.1f}")
 
 # SCENARIO 2 — Reach 60 (match Richland-level performance)
 s60 = franklin_2025.copy()
@@ -109,7 +109,7 @@ s60.update({
     'Travel Time to Work': 35,
     'Spending per Capita': 55,
 })
-print(f"Scenario 2 — Reach 60 (BridgeWork expanded):       {predict(s60):.1f}")
+print(f"Scenario 2 — Reach 60 (HealthScore expanded):       {predict(s60):.1f}")
 
 # SCENARIO 3 — Reach 70 (match Fresno 5805 high performer)
 s70 = franklin_2025.copy()
@@ -129,7 +129,7 @@ s70.update({
     'Gini Coefficient': 60,
     'New Businesses': 80,
 })
-print(f"Scenario 3 — Reach 70 (BridgeWork full scale):     {predict(s70):.1f}")
+print(f"Scenario 3 — Reach 70 (HealthScore full scale):     {predict(s70):.1f}")
 
 print("\n=== GAP: Franklin vs Average 60+ Tracts ===")
 print(f"{'Indicator':<25} {'Franklin':>8} {'Avg60+':>8} {'Gap':>6}  Priority")
