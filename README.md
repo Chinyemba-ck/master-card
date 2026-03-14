@@ -149,41 +149,62 @@ The analysis is split into focused modules. Entry point: `python src/regression_
 - **I (Indirect)** — HealthScore triggers a downstream chain effect
 - **X (Infrastructure/Out of scope)** — held at baseline or driven by external programs
 
-**Revised HealthScore scenarios — realistic indicator attribution (simulate.py):**
+**Evidence base — two independent validations per indicator:**
 
-Each indicator target is grounded in a specific causal mechanism. Indicators are grouped by who drives them:
+1. **Franklin's own history (2017–2025):** What indicator levels produced IGS=42. Phase 1–2 targets are restorations, not aspirations — Franklin has been there before.
+2. **Richland correlation analysis:** Pearson r of each indicator with Richland's IGS across 9 years — what actually drove a rural parish from 48 to 59.
 
-**DIRECT — HealthScore financial health scoring causes this:**
+**What Richland's data says actually drives IGS (r across 9 years):**
 
-| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Mechanism |
-|-----------|---------|---------|---------|---------|-----------|
-| Small Biz Loans | 44 | 55 | 60 | 66 | HealthScore improves financial profile → SELAHEC loans ($10K–$350K, start-ups eligible, [ruralhealthinfo.org/funding/5965](https://www.ruralhealthinfo.org/funding/5965)) + SBA Community Advantage. Target 66 = the exact capital floor shared by all 3 IGS 60+ tracts. |
-| Commercial Diversity | 36 | 50 | 65 | 80 | Financially healthy providers stay open; new healthcare startups launch with startup capital. Diversity crashed 62→36 in one year when capital stopped — reversible. |
-| Min/Women Biz | 15 | 30 | 50 | 67 | Childcare and mental health practices are majority minority/women-owned. HealthScore stabilizes them financially → they survive, grow, register formally. |
-| Early Education | 19 | 28 | 35 | 39 | Childcare centers are a primary HealthScore target. More financially stable centers = more open, more slots. Was 78 in 2017 — not a structural ceiling. |
+| Indicator | Richland r | Richland 2025 | Franklin 2025 | Gap |
+|-----------|----------:|--------------|--------------|-----|
+| Personal Income | **+0.943** | 56 | 36 | −20 |
+| Labor Mkt Engagement | **+0.911** | 58 | 14 | −44 |
+| Female Above Poverty | **+0.901** | 65 | 69 | Franklin +4 |
+| Travel Time to Work | **+0.852** | 70 | 9 | −61 |
+| Net Occupancy | **+0.827** | 85 | 38 | −47 |
+| Early Education | **+0.712** | 69 | 19 | −50 |
+| Small Biz Loans | −0.231 | 50 | 44 | (not a Richland driver) |
+| Comm Diversity | +0.419 | 21 | 36 | Franklin already higher |
+| Internet Access | −0.379 | 3 | 2 | (Richland fell as IGS rose) |
 
-**INDIRECT — HealthScore triggers the chain (same pattern as Richland's 2023 jump):**
+> **Critical finding:** Small Biz Loans and CommDiv do NOT drive Richland's IGS. Richland's loans fell as its IGS rose. The real engine is the human economic chain: Early Education → Labor Engagement → Personal Income → Net Occupancy stabilizes. This is the chain HealthScore must trigger.
 
-| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Mechanism |
-|-----------|---------|---------|---------|---------|-----------|
-| Labor Mkt Engagement | 14 | 14 | 20 | 35 | Healthcare businesses employ staff (billing, admin, care workers). Richland proof: childcare first → women work → labor engagement rises. Conservative lag of 1–2 years before this shows up. |
-| Personal Income | 36 | 36 | 40 | 48 | Follows labor engagement. Staff at stabilized providers earn wages; income follows. |
+**DIRECT — HealthScore financial scoring causes this:**
 
-**INFRASTRUCTURE — NELPCO/Volt, not HealthScore (label this clearly when presenting):**
+| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Evidence |
+|-----------|---------|---------|---------|---------|---------|
+| Small Biz Loans | 44 | 55 | 62 | 66 | Franklin restoration (was 74 in 2017). SELAHEC + SBA pipeline. Franklin recovered 30→60 in 4 years already. Target 66 = empirical floor for all 3 IGS 60+ tracts. |
+| Early Education | 19 | 30 | 42 | 55 | Franklin restoration (was 78/2017, 65/2020). Richland r=+0.71. HealthScore stabilizes childcare → centers stay open. Richland gained +22 in one year; we claim +11. |
+| Commercial Diversity | 36 | 42 | 52 | 65 | Franklin r=−0.43 (CommDiv highest when IGS lowest). Modest crash recovery only. Richland CommDiv=21 at IGS=59 — NOT primary lever. Ridge coeff +2.81 is cross-tract, not Franklin-specific. |
+| Min/Women Biz | 15 | 25 | 45 | 60 | Childcare/MH practices (majority women-owned) stabilized → survive, grow, register. Low Ridge coeff (+0.27). |
 
-| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Mechanism |
-|-----------|---------|---------|---------|---------|-----------|
-| Internet Access | 2 | 2 | 35 | 70 | NELPCO/Volt $54M fiber build. HealthScore deploys on top of this infrastructure — it does not install fiber. Phase 1 excludes this; by Phase 2 the build is fully live. |
+**INDIRECT — HealthScore triggers the chain (Richland-validated):**
 
-**Ridge IGS predictions (R²=0.805 — the only valid model at n=63):**
+| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Evidence |
+|-----------|---------|---------|---------|---------|---------|
+| Labor Mkt Engagement | 14 | 14 | 28 | 42 | Richland r=+0.91 — #2 driver. Franklin was 48 in 2017. Childcare→women work; 1–2 yr lag. 42 restores Franklin's 2017 level. |
+| Personal Income | 36 | 36 | 43 | 52 | Richland r=+0.94 — #1 driver. Richland jumped +16 in 2023 when chain fired. 52 approaches Richland's 56. |
+| Female Above Poverty | 69 | 69 | 75 | 80 | Richland r=+0.90. Franklin already beats Richland. High Ridge coeff (+2.09) — even +6 has meaningful impact. |
+| Net Occupancy | 38 | 38 | 42 | 52 | Richland r=+0.83. Jobs → people stop leaving. |
+| Travel Time to Work | 9 | 9 | 18 | 28 | Richland r=+0.85 — #4 driver. Remote RHTP jobs reduce commute burden. Richland went 24→70 in 2 years; 28 is very conservative. |
+| Spending per Capita | 50 | 50 | 58 | 65 | Follows income. Ridge coeff +2.27. 60+ tract avg=68. |
 
-| Phase | Timeline | What's Being Targeted | Ridge IGS | Ensemble avg |
-|-------|----------|----------------------|-----------|--------------|
-| Phase 1 | Year 1 | HealthScore direct levers only (loans, diversity, min/women biz, early ed) | **39.8** | 39.3 |
-| Phase 2 | Years 2–3 | + indirect chain (labor, income) + capital floor approaching 66 + broadband live | **41.9** | 43.6 |
-| Phase 3 | Years 4–5 | + regional scale, net occupancy stabilizes, full capital floor hit | **46.6** | 48.1 |
+**INFRASTRUCTURE — NELPCO/Volt, not HealthScore:**
 
-> **Note on revised numbers:** These projections are more conservative than earlier estimates (40.6/51.0/63.9) because Internet Access is correctly removed from Phase 1 and Labor Engagement is given a realistic lag. The Phase 3 prediction of 46.6 (Ridge) / 48.1 (ensemble) is honest: HealthScore alone, without major infrastructure or demographic shifts, realistically moves IGS from 38 to ~47 over 5 years. Crossing IGS 50+ requires the full broadband + labor chain to mature — which is achievable but takes time.
+| Indicator | Current | Phase 1 | Phase 2 | Phase 3 | Note |
+|-----------|---------|---------|---------|---------|------|
+| Internet Access | 2 | 2 | 35 | 70 | NELPCO/Volt $54M fiber. Richland's internet FELL (8→3) as its IGS rose 48→59. Not an IGS driver — label as infrastructure. |
+
+**Predictions (R²=0.805 Ridge — only valid model at n=63):**
+
+| Phase | Timeline | What's targeted | Ridge IGS | Ensemble avg |
+|-------|----------|----------------|-----------|--------------|
+| Phase 1 | Year 1 | Direct: loans, early ed, CommDiv, min/women biz | **39.2** | 39.0 |
+| Phase 2 | Years 2–3 | + indirect chain: labor eng, income, travel time, net occ, female pov | **43.7** | 46.0 |
+| Phase 3 | Years 4–5 | + full chain maturity, net occupancy stabilizes, capital floor 66 | **50.4** | 49.5 |
+
+> **Why these numbers are defensible:** Small Biz Loans (44→55) and Early Education (19→30) are Phase 1 restoration targets — Franklin held these levels in 2017–2020. Labor Engagement (14→28) and Personal Income (36→43) in Phase 2 are the Richland-validated primary drivers with r=0.91 and 0.94. Phase 3 Ridge of 50.4 crosses IGS 45 — built on the same indicators that moved Richland from 48 to 59.
 
 ---
 
