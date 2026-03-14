@@ -30,10 +30,15 @@
 - Years: 2017–2025 (9 years per tract)
 - **Total observations after concat: 63 rows × ~50 columns**
 
-**Columns extracted per indicator (example — Internet Access):**
-- `PLACE_Internet Access Score` — 0–100 score
-- `PLACE_Internet Access Tract, %` — raw % in this community
-- `PLACE_Internet Access Base, %` — benchmark comparison group %
+**Each IGS indicator gives 3 columns (example — Internet Access):**
+
+| Column | What It Means |
+|--------|--------------|
+| `PLACE_Internet Access Score` | The 0–100 score Mastercard assigns (normalized, comparable across all tracts) |
+| `PLACE_Internet Access Tract, %` | The **raw number for this community** — e.g., "31% of Franklin households have internet access" |
+| `PLACE_Internet Access Base, %` | The **national benchmark** — what a typical comparison tract looks like |
+
+The Score is derived from the gap between Tract and Base. A low score means the community's raw % is far below the benchmark — e.g., Franklin Internet Access: Score=2, Tract=31%, Base=78% (47 points below average). This is why a score of 2 looks much worse than the raw 31% — because most places are at 78%.
 
 **Pillars and indicators extracted:**
 
