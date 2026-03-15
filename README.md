@@ -319,7 +319,7 @@ The national Ridge model trained on 757,582 observations confirms which indicato
 | 2 | Net Occupancy | **+1.88** | **+0.827** | +0.24 | ✅ National + Archibald agree |
 | 3 | Labor Mkt Engagement | **+1.86** | **+0.911** | +0.73 | ✅ All three agree: core lever |
 | 4 | Commercial Diversity | +1.80 | +0.419 | **−0.43** | ⚠️ National signal, NOT a Winnsboro lever |
-| 5 | Real Estate Value | **+1.79** | **+0.683** | −0.15 | ✅ National + Archibald agree (slow-moving) |
+| 5 | Real Estate Value | **+1.79** | **+0.683** | −0.15 | ✅ National + Archibald agree — but **not an actionable lever**: property values rise *after* jobs and people return, not before. It is a downstream outcome of solving Net Occupancy and Personal Income, not a target itself. |
 | 13 | Early Education | +0.99 | +0.712 | **+0.78** | ✅ All three agree: root trigger |
 
 The sensitivity analysis (chart 10, national RF applied to Winnsboro's profile) shows **Labor Market Engagement** produces the single largest IGS gain per 20-point improvement for a Winnsboro-like tract.
