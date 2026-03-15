@@ -299,27 +299,33 @@ import numpy as np
 # Winnsboro history + Archibald correlation = dual validation per indicator.
 
 PHASE1 = {
-    # DIRECT — HealthScore Year 1, ~20 providers onboarded
-    'Small Biz Loans':      55,   # Winnsboro restoration: was 72-74 in 2017-18; SELAHEC pipeline
+    # DIRECT — HealthScore Year 1, ~10% provider adoption
+    'Small Biz Loans':      60,   # Winnsboro was 72-74 in 2017-18, hit 60 in 2023; SELAHEC pipeline
     'Commercial Diversity': 42,   # Modest crash recovery (62->36->42); NOT a primary Winnsboro lever
     'Min/Women Biz':        25,   # Childcare/MH practices reach ~3% ownership (up from 2.1%)
-    'Early Education':      30,   # Winnsboro restoration: was 78/65; Archibald gained +22 in 1 yr
-    # All other indicators held — see rationale above
+    'Early Education':      36,   # Winnsboro was 78/65; Archibald gained +22 in 1yr; +17 is conservative
+    # EARLY CHAIN — providers staying open immediately stabilizes wages and slows outmigration
+    'Personal Income':      40,   # Healthcare payroll stays in community; providers solvent → wages paid
+                                  # Winnsboro income grew 2017-2022 then stalled; stabilizing arrests stall
+    'Labor Mkt Engagement': 20,   # Healthcare jobs not leaving = fewer layoffs; partial recovery from 14
+                                  # Winnsboro was 48 in 2017; 20 is minimal stabilization, not chain recovery
+    'Net Occupancy':        40,   # Job stability slows departure; modest arrest of decline from 38
+                                  # Full occupancy recovery is Phase 2-3; this is floor stabilization
 }
 
 PHASE2 = {
     **PHASE1,
-    # DIRECT — 50-100 providers scored
-    'Small Biz Loans':      62,   # Winnsboro had 60 in 2023 already; approaching 66 capital floor
+    # DIRECT — 50% adoption; childcare centers onboarded
+    'Small Biz Loans':      64,   # Approaching empirical 66 capital floor
     'Commercial Diversity': 52,   # New healthcare types sustained; Ridge coeff high but W-corr negative
     'Min/Women Biz':        45,   # Second cohort + SBA Community Advantage
-    'Early Education':      42,   # Winnsboro had 65 in 2020; Archibald r=+0.71; childcare expansion
-    # INDIRECT — chain effects with 1-2 year lag; Archibald-validated
-    'Labor Mkt Engagement': 28,   # Archibald r=+0.91; childcare->women work chain; Winnsboro was 48 in 2017
-    'Personal Income':      43,   # Archibald r=+0.94; Archibald jumped +16 in 2023 when chain fired
+    'Early Education':      46,   # Winnsboro had 65 in 2020; Archibald r=+0.71; childcare expansion
+    # INDIRECT — chain effects accelerating; Archibald-validated
+    'Labor Mkt Engagement': 32,   # Archibald r=+0.91; childcare->women work chain; Winnsboro was 48 in 2017
+    'Personal Income':      46,   # Archibald r=+0.94; Archibald jumped +16 in 2023 when chain fired
     'Female Above Poverty': 75,   # Archibald r=+0.90; Archibald +32 in 2023; Winnsboro already strong (69)
     'Spending per Capita':  58,   # Follows income; Ridge coeff +2.27
-    'Net Occupancy':        42,   # Archibald r=+0.83; jobs emerging slow outmigration
+    'Net Occupancy':        46,   # Archibald r=+0.83; jobs emerging slow outmigration further
     'Travel Time to Work':  18,   # Archibald r=+0.85; remote RHTP jobs begin reducing commute burden
     # INFRASTRUCTURE — NELPCO/Volt fully live (not HealthScore)
     'Internet Access':      35,   # NELPCO/Volt; Archibald's internet FELL as IGS rose — label separately
@@ -327,17 +333,17 @@ PHASE2 = {
 
 PHASE3 = {
     **PHASE2,
-    # DIRECT — regional scale, 100+ providers
+    # DIRECT — 90% adoption; full ecosystem credit-visible
     'Small Biz Loans':      66,   # Empirical 60+ capital floor (Fresno+Dallas all score exactly 66)
     'Commercial Diversity': 65,   # Ridge cross-tract signal; provider base diversified at scale
     'Min/Women Biz':        60,   # Midway to Archibald (82); 5-year horizon
     'Early Education':      55,   # Winnsboro had 65 in 2020; Archibald=69; 55 is realistic restoration
     # INDIRECT — full chain maturity; primary Archibald-validated drivers
-    'Labor Mkt Engagement': 42,   # Archibald r=+0.91; approaching Winnsboro's 2017 level (48); RHTP jobs
-    'Personal Income':      52,   # Archibald r=+0.94; Archibald=56; approaching parity
+    'Labor Mkt Engagement': 44,   # Archibald r=+0.91; approaching Winnsboro's 2017 level (48); RHTP jobs
+    'Personal Income':      53,   # Archibald r=+0.94; Archibald=56; approaching parity
     'Female Above Poverty': 80,   # Archibald r=+0.90; building on Winnsboro's existing strength
     'Spending per Capita':  65,   # 60+ tract avg=68; within reach
-    'Net Occupancy':        52,   # Archibald r=+0.83; Archibald=85; 52 is conservative 5-year target
+    'Net Occupancy':        54,   # Archibald r=+0.83; Archibald=85; 54 is conservative 5-year target
     'Real Estate Value':    58,   # Archibald r=+0.68; follows net occupancy (slow; high Ridge coeff)
     'Travel Time to Work':  28,   # Archibald r=+0.85; Archibald=70; 28 is very conservative
     # INFRASTRUCTURE — mature
