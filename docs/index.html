@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentinel — Community Economic Intelligence</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark:   #1A1A2E;
+      --navy:   #16213E;
+      --accent: #0F3460;
+      --mc-red: #EB001B;
+      --mc-org: #FF5F00;
+      --mc-yel: #F79E1B;
+      --green:  #1A7A4A;
+      --light:  #F7F8FA;
+      --gray:   #6C757D;
+      --white:  #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 60px;
+      background: rgba(26,26,46,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 100;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em;
+    }
+    .mc-logo { display: flex; align-items: center; }
+    .mc-logo span:first-child {
+      display: inline-block; width: 22px; height: 22px;
+      border-radius: 50%; background: var(--mc-red);
+    }
+    .mc-logo span:last-child {
+      display: inline-block; width: 22px; height: 22px;
+      border-radius: 50%; background: var(--mc-yel);
+      margin-left: -8px;
+    }
+    nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.9rem; }
+    nav a:hover { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 80px 2rem 4rem;
+      background: radial-gradient(ellipse at 50% 30%, #0F3460 0%, var(--dark) 70%);
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 0.3rem 0.9rem; border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--mc-yel); margin-bottom: 1.5rem;
+    }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+    .hero h1 span { color: var(--mc-yel); }
+    .hero p.lead {
+      max-width: 600px; font-size: 1.15rem;
+      color: rgba(255,255,255,0.7); margin: 0 auto 2.5rem;
+    }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 0.75rem 1.75rem; border-radius: 6px;
+      font-size: 0.95rem; font-weight: 600; text-decoration: none;
+      cursor: pointer; border: none; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: linear-gradient(90deg, var(--mc-red), var(--mc-org)); color: var(--white); }
+    .btn-outline  { background: transparent; border: 1.5px solid rgba(255,255,255,0.4); color: var(--white); }
+
+    /* ── STAT STRIP ── */
+    .stats {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
+      background: rgba(255,255,255,0.04);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 2.5rem 2rem;
+    }
+    .stat { text-align: center; }
+    .stat .num { font-size: 2rem; font-weight: 800; color: var(--mc-yel); }
+    .stat .lbl { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      padding: 5rem 2rem; text-align: center;
+      background: var(--navy);
+    }
+    .section-label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--mc-yel); margin-bottom: 0.75rem;
+    }
+    .video-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .video-section p  { color: rgba(255,255,255,0.6); max-width: 540px; margin: 0 auto 2rem; }
+
+    .video-wrapper {
+      position: relative; max-width: 800px; margin: 0 auto;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .video-placeholder {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #0d1b2a 0%, #1a2e44 50%, #0d1b2a 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem; cursor: pointer;
+    }
+    .play-btn {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--mc-red), var(--mc-org));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(235,0,27,0.4);
+      transition: transform 0.2s;
+    }
+    .play-btn:hover { transform: scale(1.08); }
+    .play-btn svg { width: 28px; height: 28px; fill: white; margin-left: 4px; }
+    .video-placeholder .caption {
+      font-size: 0.85rem; color: rgba(255,255,255,0.45);
+      letter-spacing: 0.05em;
+    }
+    .coming-soon-tag {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.25rem 0.65rem; border-radius: 20px;
+      font-size: 0.7rem; letter-spacing: 0.08em; color: var(--mc-yel);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { padding: 5rem 2rem; background: var(--dark); }
+    .how-section h2 { text-align: center; font-size: 2rem; margin-bottom: 3rem; }
+    .steps { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; max-width: 900px; margin: 0 auto; }
+    .step {
+      flex: 1 1 220px; max-width: 260px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 1.75rem 1.5rem;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--mc-red), var(--mc-org));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.95rem; margin-bottom: 1rem;
+    }
+    .step h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .step p  { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+
+    /* ── IGS SCORES ── */
+    .igs-section { padding: 5rem 2rem; background: var(--navy); text-align: center; }
+    .igs-section h2 { font-size: 2rem; margin-bottom: 0.75rem; }
+    .igs-section p  { color: rgba(255,255,255,0.6); max-width: 540px; margin: 0 auto 2.5rem; }
+    .score-cards { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .score-card {
+      width: 160px; border-radius: 10px; padding: 1.5rem 1rem;
+      border: 1px solid rgba(255,255,255,0.1); text-align: center;
+    }
+    .score-card .score { font-size: 2.5rem; font-weight: 800; }
+    .score-card .name  { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin-top: 0.25rem; }
+    .score-card .rank  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 0.2rem; }
+    .card-winnsboro { background: rgba(192,57,43,0.15); border-color: rgba(192,57,43,0.4); }
+    .card-winnsboro .score { color: #E74C3C; }
+    .card-archibald { background: rgba(26,111,168,0.15); border-color: rgba(26,111,168,0.4); }
+    .card-archibald .score { color: #2E86C1; }
+    .card-national  { background: rgba(26,122,74,0.15);  border-color: rgba(26,122,74,0.4); }
+    .card-national  .score { color: #1A7A4A; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 5rem 2rem; text-align: center;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--dark) 100%);
+    }
+    .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .cta-section p  { color: rgba(255,255,255,0.65); max-width: 480px; margin: 0 auto 2rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 1.5rem 2rem; text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.78rem; color: rgba(255,255,255,0.35);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="mc-logo"><span></span><span></span></div>
+    &nbsp;Sentinel
+  </div>
+  <ul>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#scores">IGS Scores</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Powered by Mastercard IGS · 2025</div>
+  <h1>Community Economic<br/><span>Intelligence</span>, Finally.</h1>
+  <p class="lead">
+    Sentinel surfaces which financial health levers matter most for underserved communities —
+    so interventions hit where they count.
+  </p>
+  <div class="btn-group">
+    <a href="#demo" class="btn btn-primary">Watch Demo</a>
+    <a href="https://github.com/Chinyemba-ck/master-card" class="btn btn-outline" target="_blank">View on GitHub</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="num">83,355</div><div class="lbl">US Census Tracts</div></div>
+  <div class="stat"><div class="num">18</div><div class="lbl">IGS Indicators</div></div>
+  <div class="stat"><div class="num">93.5%</div><div class="lbl">Model R² (Ridge)</div></div>
+  <div class="stat"><div class="num">21 pts</div><div class="lbl">Winnsboro → Archibald Gap</div></div>
+</div>
+
+<!-- VIDEO -->
+<section class="video-section" id="demo">
+  <div class="section-label">Product Demo</div>
+  <h2>See Sentinel in Action</h2>
+  <p>A walkthrough of how Sentinel identifies priority levers for Franklin Parish, Louisiana.</p>
+
+  <div class="video-wrapper">
+    <div class="video-placeholder" title="Demo video coming soon">
+      <div class="play-btn">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <div class="caption">SENTINEL PRODUCT DEMO</div>
+    </div>
+    <span class="coming-soon-tag">Coming Soon</span>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <h2>How It Works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Ingest IGS Data</h3>
+      <p>Pull Mastercard IGS scores for any census tract — 83,355 tracts nationwide, updated annually.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Train the Model</h3>
+      <p>Ridge regression (R²=0.935) and Gradient Boosting (R²=0.956) identify which indicators drive overall IGS.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Benchmark & Gap</h3>
+      <p>Compare any community against national and state distributions. Quantify the gap to aspirational peers.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Prioritize Levers</h3>
+      <p>Cross-reference model weights, historical correlation, and gap size to surface the top 5 actionable interventions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IGS SCORES -->
+<section class="igs-section" id="scores">
+  <h2>Where Winnsboro Stands</h2>
+  <p>Franklin Parish sits at the 10th national percentile. Archibald shows what is possible for a rural Louisiana peer.</p>
+  <div class="score-cards">
+    <div class="score-card card-winnsboro">
+      <div class="score">38</div>
+      <div class="name">Winnsboro<br/>Franklin Parish</div>
+      <div class="rank">10th nat'l · 20th LA</div>
+    </div>
+    <div class="score-card card-archibald">
+      <div class="score">59</div>
+      <div class="name">Archibald<br/>Richland Parish</div>
+      <div class="rank">82nd nat'l · 94th LA</div>
+    </div>
+    <div class="score-card card-national">
+      <div class="score">50</div>
+      <div class="name">National<br/>Median</div>
+      <div class="rank">83,355 tracts · 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2>Ready to find your community's levers?</h2>
+  <p>Sentinel is built for community lenders, CDFIs, and economic development teams.</p>
+  <div class="btn-group">
+    <a href="mailto:sentinel@example.com" class="btn btn-primary">Get Early Access</a>
+    <a href="https://github.com/Chinyemba-ck/master-card" class="btn btn-outline" target="_blank">GitHub Repo</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2025 Sentinel · Built on Mastercard IGS Tool · Data: 83,355 US census tracts
+</footer>
+
+</body>
+</html>
