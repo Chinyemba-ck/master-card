@@ -309,18 +309,30 @@ The correlation heatmap (chart 03) shows these move together in Winnsboro's own 
 
 ---
 
-### Finding 4 — National model (R²=0.935) identifies the top IGS drivers
+### Finding 4 — National Ridge Regression (R²=0.935, n=757,582) identifies the top IGS drivers
 
-The national Ridge model trained on 757,582 observations confirms which indicators drive IGS broadly. Top standardized coefficients:
+Ridge + Gradient Boosting + Random Forest trained on 757,582 national census tracts (Winnsboro & Archibald excluded). Ridge R²=0.935 (5-fold CV). Full standardised coefficients:
 
-| Rank | Indicator | Coef (national) | Archibald r | Winnsboro r | Alignment |
-|---|---|---|---|---|---|
-| 1 | Personal Income | **+2.15** | **+0.943** | −0.66 | ✅ National + Archibald agree: top driver |
-| 2 | Net Occupancy | **+1.88** | **+0.827** | +0.24 | ✅ National + Archibald agree |
-| 3 | Labor Mkt Engagement | **+1.86** | **+0.911** | +0.73 | ✅ All three agree: core lever |
-| 4 | Commercial Diversity | +1.80 | +0.419 | **−0.43** | ⚠️ National signal, NOT a Winnsboro lever |
-| 5 | Real Estate Value | **+1.79** | **+0.683** | −0.15 | ✅ National + Archibald agree — but **not an actionable lever**: property values rise *after* jobs and people return, not before. It is a downstream outcome of solving Net Occupancy and Personal Income, not a target itself. |
-| 13 | Early Education | +0.99 | +0.712 | **+0.78** | ✅ All three agree: root trigger |
+| Rank | Indicator | Coefficient |
+|---|---|---|
+| 1 | Personal Income | +2.149 |
+| 2 | Net Occupancy | +1.884 |
+| 3 | Labor Mkt Engagement | +1.857 |
+| 4 | Commercial Diversity | +1.798 |
+| 5 | Real Estate Value | +1.790 |
+| 6 | Gini Coefficient | +1.560 |
+| 7 | Min/Women Biz | +1.352 |
+| 8 | Female Above Poverty | +1.284 |
+| 9 | Park Land | +1.274 |
+| 10 | Travel Time to Work | +1.221 |
+| 11 | Small Biz Loans | +1.221 |
+| 12 | Spending per Capita | +1.208 |
+| 13 | New Businesses | +1.202 |
+| 14 | Health Insurance | +1.179 |
+| 15 | Affordable Housing | +1.143 |
+| 16 | Internet Access | +1.118 |
+| 17 | Early Education | +0.992 |
+| 18 | Spend Growth | +0.558 |
 
 The sensitivity analysis (chart 10, national RF applied to Winnsboro's profile) shows **Labor Market Engagement** produces the single largest IGS gain per 20-point improvement for a Winnsboro-like tract.
 
@@ -340,6 +352,21 @@ The sensitivity analysis (chart 10, national RF applied to Winnsboro's profile) 
 | **Affordable Housing** | **56** | **43** | **+13** | STRENGTH — Winnsboro already leads Archibald |
 | Commercial Diversity | 36 | 21 | +15 | ⚠️ Archibald thrives with *lower* diversity — not a primary lever |
 | Internet Access | 2 | 3 | −1 | Infrastructure only — NELPCO/Volt (not HealthScore) |
+
+#### Lever Selection — where national model, Archibald benchmark, and Winnsboro history all agree
+
+| Indicator | National Ridge | Archibald r | Winnsboro r | Gap vs Archibald | Gap vs National | Verdict |
+|---|---|---|---|---|---|---|
+| Labor Engagement | +1.86 (rank 3) | +0.911 | +0.729 | −44 pts | −33 pts | ✅ All three agree — biggest actionable gap |
+| Early Education | +0.99 (rank 17) | +0.712 | +0.776 | −50 pts | −10 pts | ✅ Root trigger — Winnsboro was 78 in 2017 |
+| Personal Income | +2.15 (rank 1) | +0.943 | −0.658 | −20 pts | −11 pts | ✅ Indirect — follows labor chain; Archibald's top driver |
+| Net Occupancy | +1.88 (rank 2) | +0.827 | +0.244 | −47 pts | −35 pts | ✅ Indirect — population stabilizes when jobs appear |
+| Travel Time | +1.22 (rank 10) | +0.852 | +0.628 | −61 pts | −47 pts | ✅ Remote RHTP jobs address this directly |
+| Small Biz Loans | +1.22 (rank 11) | −0.231 | +0.720 | −6 pts | −10 pts | ⚠️ Winnsboro & national agree; Archibald not a proof point |
+| Comm Diversity | +1.80 (rank 4) | +0.419 | −0.426 | +15 pts (WIN leads) | −41 pts | ⚠️ Skip — local history contradicts signal |
+| Internet Access | +1.12 (rank 16) | −0.379 | +0.694 | −1 pt | −11 pts | ⚠️ Infrastructure only — not a primary lever |
+
+> Archibald r = Pearson correlation between indicator and IGS across Archibald's 9-year history (2017–2025). Winnsboro r = same for Winnsboro. Gap vs Archibald = Winnsboro 2025 minus Archibald 2025. Gap vs National = Winnsboro 2025 minus national median (2025).
 
 → *See [chart 08](https://github.com/Chinyemba-ck/master-card/blob/main/charts/08_regression_analysis.png), [chart 09](https://github.com/Chinyemba-ck/master-card/blob/main/charts/09_model_comparison.png), [chart 10](https://github.com/Chinyemba-ck/master-card/blob/main/charts/10_sensitivity_analysis.png)*
 
