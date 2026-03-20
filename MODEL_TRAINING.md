@@ -115,7 +115,9 @@ Cross-validation is computed on a random 50,000-row stratified sample of the tra
 
 ### Holdout Validation (`src/validate_holdout.py`)
 
-Four out-of-sample validation strategies are run. In all holdout strategies, **both Winnsboro and Archibald are excluded from the training pool** — models never see either community during training.
+> **Important:** Winnsboro and Archibald are removed from the full dataset **before any split or training occurs**. They appear in neither the training set nor the test set across all 4 strategies. Every prediction made for these two communities is a completely blind, out-of-sample inference — the models were trained exclusively on the remaining national tracts and have never seen these communities' IGS values at any point.
+
+Four out-of-sample validation strategies are run:
 
 #### Strategy 1 — 80/20 Train/Test Split
 
